@@ -9,11 +9,11 @@ const ProfileHeader = () => {
       transition={{ duration: 0.5 }}
       className="flex flex-col items-center text-center"
     >
-      {/* Avatar with glowing border */}
-      <div className="relative mb-4">
-        <div className="absolute inset-0 rounded-full bg-gradient-to-r from-purple-500 via-pink-500 to-purple-500 animate-pulse-glow blur-sm" />
-        <div className="relative w-28 h-28 rounded-full p-[3px] bg-gradient-to-r from-purple-500 via-pink-500 to-purple-500">
-          <div className="w-full h-full rounded-full bg-card overflow-hidden">
+      {/* Avatar with rotating gradient border */}
+      <div className="relative mb-5">
+        <div className="absolute -inset-1 rounded-full bg-gradient-to-r from-purple-500 via-pink-500 to-purple-500 animate-gradient-rotate blur-md opacity-75" />
+        <div className="relative w-28 h-28 rounded-full p-[3px] bg-gradient-to-r from-purple-500 via-pink-500 to-purple-500 animate-gradient-rotate shadow-2xl shadow-purple-500/30">
+          <div className="w-full h-full rounded-full bg-card overflow-hidden ring-2 ring-black/20">
             <img
               src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=200&h=200&fit=crop&crop=face"
               alt="Profile avatar"
@@ -32,7 +32,7 @@ const ProfileHeader = () => {
       </div>
 
       {/* Bio */}
-      <p className="text-muted-foreground text-sm max-w-xs mb-4">
+      <p className="text-muted-foreground text-sm max-w-xs mb-4 leading-relaxed">
         Digital creator & developer. Building cool stuff on the internet. 🚀
       </p>
 
@@ -41,7 +41,7 @@ const ProfileHeader = () => {
         href="https://twitch.tv"
         target="_blank"
         rel="noopener noreferrer"
-        className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-live/10 border border-live/30 text-live animate-live-pulse"
+        className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-live/10 border border-live/30 text-live animate-live-pulse shadow-lg shadow-live/20"
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
       >
