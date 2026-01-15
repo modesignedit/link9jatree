@@ -63,6 +63,8 @@ export default {
         verified: "hsl(var(--verified))",
         btc: "hsl(var(--btc))",
         usdt: "hsl(var(--usdt))",
+        twitter: "hsl(var(--twitter))",
+        github: "hsl(var(--github))",
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -103,6 +105,18 @@ export default {
           "50%": { backgroundPosition: "100% 50%" },
           "100%": { backgroundPosition: "0% 50%" },
         },
+        "spin-slow": {
+          "0%": { transform: "rotate(0deg)" },
+          "100%": { transform: "rotate(360deg)" },
+        },
+        "float": {
+          "0%, 100%": { transform: "translateY(0px)" },
+          "50%": { transform: "translateY(-10px)" },
+        },
+        "shimmer": {
+          "0%": { backgroundPosition: "-200% 0" },
+          "100%": { backgroundPosition: "200% 0" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -110,6 +124,13 @@ export default {
         "pulse-glow": "pulse-glow 2s ease-in-out infinite",
         "live-pulse": "live-pulse 1.5s ease-in-out infinite",
         "gradient-rotate": "gradient-rotate 3s ease infinite",
+        "spin-slow": "spin-slow 8s linear infinite",
+        "float": "float 3s ease-in-out infinite",
+        "shimmer": "shimmer 2s linear infinite",
+      },
+      backgroundSize: {
+        "200%": "200%",
+        "300%": "300%",
       },
     },
   },

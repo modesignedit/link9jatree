@@ -38,6 +38,83 @@ export type Database = {
         }
         Relationships: []
       }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          bio: string | null
+          btc_address: string | null
+          created_at: string
+          display_name: string | null
+          id: string
+          live_url: string | null
+          updated_at: string
+          usdt_address: string | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          bio?: string | null
+          btc_address?: string | null
+          created_at?: string
+          display_name?: string | null
+          id: string
+          live_url?: string | null
+          updated_at?: string
+          usdt_address?: string | null
+        }
+        Update: {
+          avatar_url?: string | null
+          bio?: string | null
+          btc_address?: string | null
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          live_url?: string | null
+          updated_at?: string
+          usdt_address?: string | null
+        }
+        Relationships: []
+      }
+      social_links: {
+        Row: {
+          created_at: string
+          display_order: number
+          icon: string
+          id: string
+          label: string
+          platform: string
+          url: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          display_order?: number
+          icon?: string
+          id?: string
+          label: string
+          platform: string
+          url: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          display_order?: number
+          icon?: string
+          id?: string
+          label?: string
+          platform?: string
+          url?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "social_links_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
