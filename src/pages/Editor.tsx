@@ -371,13 +371,21 @@ const Editor = () => {
           animate={{ opacity: 1, y: 0 }}
           className="flex items-center justify-between mb-6 sm:mb-8"
         >
-          <a
-            href="/"
-            className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors group"
-          >
-            <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
-            <span className="hidden sm:inline">Back to Profile</span>
-          </a>
+          <div className="flex items-center gap-4">
+            <a
+              href="/"
+              className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors group"
+            >
+              <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
+              <span className="hidden sm:inline">Home</span>
+            </a>
+            <a
+              href="/demo"
+              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
+              View Profile
+            </a>
+          </div>
           
           <div className="flex items-center gap-2">
             <Button

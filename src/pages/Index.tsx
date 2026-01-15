@@ -308,14 +308,29 @@ const Index = () => {
             Made with <Heart className="w-3 h-3 text-live fill-live" /> by {profile.display_name}
           </p>
           
-          {!user && (
+          <div className="flex items-center justify-center gap-4 mt-3">
             <Link 
-              to="/auth" 
-              className="text-[11px] sm:text-xs text-muted-foreground/40 hover:text-muted-foreground/60 transition-colors mt-2 inline-block"
+              to="/" 
+              className="text-[11px] sm:text-xs text-muted-foreground/40 hover:text-muted-foreground/60 transition-colors"
             >
-              Admin Login
+              ← Back to Home
             </Link>
-          )}
+            {!user ? (
+              <Link 
+                to="/auth" 
+                className="text-[11px] sm:text-xs text-muted-foreground/40 hover:text-muted-foreground/60 transition-colors"
+              >
+                Admin Login
+              </Link>
+            ) : (
+              <Link 
+                to="/editor" 
+                className="text-[11px] sm:text-xs text-primary/60 hover:text-primary transition-colors"
+              >
+                Edit Profile →
+              </Link>
+            )}
+          </div>
         </motion.footer>
       </div>
 
