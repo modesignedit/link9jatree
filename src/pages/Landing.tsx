@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import { 
   Sparkles, 
-  Link as LinkIcon, 
+  Link2,
   Palette, 
   BarChart3, 
   Smartphone, 
@@ -20,10 +20,11 @@ import { useAuth } from "@/hooks/useAuth";
 import { usePWA } from "@/hooks/usePWA";
 import ParticleBackground from "@/components/ParticleBackground";
 import AnimatedOrbs from "@/components/AnimatedOrbs";
+import Logo from "@/components/Logo";
 
 const FEATURES = [
   {
-    icon: LinkIcon,
+    icon: Link2,
     title: "One Link, All Your Socials",
     description: "Drop all your links for one spot. No shaking!",
     emoji: "🔗",
@@ -82,17 +83,7 @@ const Landing = () => {
       {/* Navigation */}
       <nav className="relative z-20 px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2 group">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-naija-green to-emerald-500 flex items-center justify-center shadow-lg shadow-naija-green/30 group-hover:scale-110 transition-transform animate-naija-pulse">
-              <LinkIcon className="w-5 h-5 text-white" />
-            </div>
-            <span className="text-xl font-bold text-foreground font-['Space_Grotesk'] hidden sm:block">
-              Link<span className="text-naija-green">9j</span>tree
-            </span>
-            <span className="text-xs px-2 py-0.5 rounded-full bg-naija-green/20 text-naija-light font-medium hidden sm:flex items-center gap-1">
-              FREE <span className="animate-flag-fly">🇳🇬</span>
-            </span>
-          </Link>
+          <Logo size="md" showBadge={true} />
           
           <div className="flex items-center gap-2 sm:gap-4">
             {canInstall && (
@@ -383,17 +374,7 @@ const Landing = () => {
           
           <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
             {/* Logo */}
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-naija-green to-emerald-500 flex items-center justify-center animate-naija-pulse">
-                <LinkIcon className="w-4 h-4 text-white" />
-              </div>
-              <span className="font-bold text-foreground font-['Space_Grotesk']">
-                Link<span className="text-naija-green">9j</span>tree
-              </span>
-              <span className="text-xs px-2 py-0.5 rounded-full bg-naija-green/20 text-naija-light font-medium flex items-center gap-1">
-                FREE <span className="animate-flag-sparkle">🇳🇬</span>
-              </span>
-            </div>
+            <Logo size="sm" showBadge={true} animated={false} />
             
             {/* Links */}
             <div className="flex items-center gap-6 text-sm text-muted-foreground">
