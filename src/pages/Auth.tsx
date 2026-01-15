@@ -73,22 +73,22 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-[#1a0b2e] to-black relative overflow-hidden flex items-center justify-center">
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-[#1a0b2e] to-black relative overflow-hidden flex items-center justify-center px-4">
       {/* Aurora background */}
       <div className="absolute inset-0 aurora-bg aurora-animated" />
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(120,80,200,0.08),transparent_50%)]" />
       
-      {/* Floating orbs */}
-      <div className="absolute top-20 left-20 w-32 h-32 bg-primary/20 rounded-full blur-3xl float" />
-      <div className="absolute bottom-20 right-20 w-40 h-40 bg-pink-500/15 rounded-full blur-3xl float-delayed" />
+      {/* Floating orbs - hidden on mobile for performance */}
+      <div className="hidden sm:block absolute top-20 left-20 w-32 h-32 bg-primary/20 rounded-full blur-3xl float" />
+      <div className="hidden sm:block absolute bottom-20 right-20 w-40 h-40 bg-pink-500/15 rounded-full blur-3xl float-delayed" />
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="relative w-full max-w-md px-6"
+        className="relative w-full max-w-md"
       >
-        <div className="glass-strong rounded-3xl p-8 shadow-2xl shadow-primary/20">
+        <div className="glass-strong rounded-2xl sm:rounded-3xl p-6 sm:p-8 shadow-2xl shadow-primary/20">
           {/* Header */}
           <div className="text-center mb-8">
             <div className="inline-flex items-center gap-2 mb-4">

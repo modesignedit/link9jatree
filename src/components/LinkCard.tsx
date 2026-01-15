@@ -101,23 +101,23 @@ const LinkCard = ({ platform, label, href, index }: LinkCardProps) => {
       transition={{ duration: 0.4, delay: 0.15 * index }}
       whileHover={{ y: -4 }}
       whileTap={{ scale: 0.98 }}
-      className={`w-full flex items-center gap-4 p-4 rounded-2xl glass-strong cursor-pointer group relative overflow-hidden transition-all duration-300 ${styles.hoverGlow} ${styles.hoverBg}`}
+      className={`w-full flex items-center gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl sm:rounded-2xl glass-strong cursor-pointer group relative overflow-hidden transition-all duration-300 ${styles.hoverGlow} ${styles.hoverBg}`}
     >
       {/* Hover gradient overlay */}
       <div className="absolute inset-0 bg-gradient-to-r from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
       
       {/* Icon container */}
-      <div className={`relative w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center transition-all duration-300 group-hover:scale-110 ${styles.iconBg}`}>
-        <Icon className={`w-5 h-5 text-foreground transition-colors duration-300 ${styles.iconColor}`} />
+      <div className={`relative w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-white/10 flex items-center justify-center transition-all duration-300 group-hover:scale-110 ${styles.iconBg}`}>
+        <Icon className={`w-4 h-4 sm:w-5 sm:h-5 text-foreground transition-colors duration-300 ${styles.iconColor}`} />
       </div>
       
       {/* Label */}
-      <span className="relative flex-1 text-foreground font-medium text-[15px] tracking-tight">
+      <span className="relative flex-1 text-foreground font-medium text-sm sm:text-[15px] tracking-tight">
         {label}
       </span>
       
       {/* Arrow */}
-      <ChevronRight className="relative w-5 h-5 text-muted-foreground group-hover:text-foreground group-hover:translate-x-1 transition-all duration-300" />
+      <ChevronRight className="relative w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground group-hover:text-foreground group-hover:translate-x-1 transition-all duration-300" />
     </motion.a>
   );
 };
