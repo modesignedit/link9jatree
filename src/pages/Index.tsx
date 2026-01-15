@@ -5,6 +5,8 @@ import ProfileHeader from "@/components/ProfileHeader";
 import LinkCard from "@/components/LinkCard";
 import SupportSection from "@/components/SupportSection";
 import ContactDrawer from "@/components/ContactDrawer";
+import ThemeToggle from "@/components/ThemeToggle";
+import ShareButton from "@/components/ShareButton";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -93,9 +95,9 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-[#1a0b2e] to-black relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-background dark:from-slate-950 dark:via-[#1a0b2e] dark:to-black relative overflow-hidden transition-colors duration-300">
       {/* Aurora background effect */}
-      <div className="absolute inset-0 aurora-bg aurora-animated" />
+      <div className="absolute inset-0 aurora-bg aurora-animated opacity-100 dark:opacity-100" />
       
       {/* Background pattern overlay */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(120,80,200,0.08),transparent_50%)]" />
@@ -106,32 +108,40 @@ const Index = () => {
       <div className="hidden sm:block absolute bottom-40 right-10 w-40 h-40 bg-pink-500/15 rounded-full blur-3xl float-delayed opacity-50" />
       <div className="hidden sm:block absolute top-1/2 left-1/4 w-24 h-24 bg-blue-500/10 rounded-full blur-2xl float-delayed opacity-50" />
 
-      {/* Edit button for logged in users */}
-      {user && (
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="absolute top-3 sm:top-4 right-3 sm:right-4 z-10"
-        >
-          <Link to="/editor">
-            <Button
-              size="sm"
-              className="bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 text-foreground gap-2 h-9 px-3 sm:px-4"
-            >
-              <Settings className="w-4 h-4" />
-              <span className="hidden sm:inline">Edit Profile</span>
-            </Button>
-          </Link>
-        </motion.div>
-      )}
+      {/* Top bar with theme toggle and edit button */}
+      <div className="absolute top-3 sm:top-4 left-3 sm:left-4 right-3 sm:right-4 z-10 flex justify-between items-center">
+        <ThemeToggle />
+        
+        {user && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+            <Link to="/editor">
+              <Button
+                size="sm"
+                className="bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/20 text-foreground gap-2 h-9 px-3 sm:px-4"
+              >
+                <Settings className="w-4 h-4" />
+                <span className="hidden sm:inline">Edit Profile</span>
+              </Button>
+            </Link>
+          </motion.div>
+        )}
+      </div>
       
-      <div className="relative max-w-md mx-auto px-4 sm:px-6 py-8 sm:py-12 flex flex-col gap-6 sm:gap-8">
+      <div className="relative max-w-md mx-auto px-4 sm:px-6 py-16 sm:py-20 flex flex-col gap-6 sm:gap-8">
         <ProfileHeader 
           displayName={profile.display_name}
           bio={profile.bio}
           avatarUrl={profile.avatar_url}
           liveUrl={profile.live_url}
         />
+
+        {/* Share Button */}
+        <div className="flex justify-center -mt-2">
+          <ShareButton displayName={profile.display_name} />
+        </div>
 
         {/* Social Links */}
         <div className="flex flex-col gap-2.5 sm:gap-3">

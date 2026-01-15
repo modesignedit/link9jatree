@@ -5,40 +5,41 @@
 /* Elite Premium Dark Link-in-Bio Design System */
 
 @layer base {
+  /* Light Mode */
   :root {
-    --background: 222.2 84% 4.9%;
-    --foreground: 240 5% 96%;
+    --background: 0 0% 98%;
+    --foreground: 240 10% 10%;
 
-    --card: 240 6% 10%;
-    --card-foreground: 240 5% 96%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 10%;
 
-    --popover: 240 6% 10%;
-    --popover-foreground: 240 5% 96%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 10%;
 
     --primary: 263 70% 50%;
-    --primary-foreground: 240 5% 96%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 240 4% 16%;
-    --secondary-foreground: 240 5% 96%;
+    --secondary: 240 5% 92%;
+    --secondary-foreground: 240 10% 10%;
 
-    --muted: 240 4% 16%;
-    --muted-foreground: 240 5% 64%;
+    --muted: 240 5% 92%;
+    --muted-foreground: 240 5% 45%;
 
     --accent: 263 70% 50%;
-    --accent-foreground: 240 5% 96%;
+    --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84% 60%;
-    --destructive-foreground: 240 5% 96%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 240 4% 20%;
-    --input: 240 4% 16%;
+    --border: 240 6% 85%;
+    --input: 240 6% 90%;
     --ring: 263 70% 50%;
 
     --radius: 0.75rem;
 
     /* Custom colors for Link-in-Bio */
-    --glass: 0 0% 100%;
-    --glass-border: 0 0% 100%;
+    --glass: 0 0% 0%;
+    --glass-border: 0 0% 0%;
     --glow: 263 70% 50%;
     --live: 0 84% 60%;
     --verified: 210 100% 50%;
@@ -50,18 +51,19 @@
     --instagram-pink: 340 75% 54%;
     --instagram-purple: 270 70% 55%;
     --instagram-orange: 25 95% 53%;
-    --github: 0 0% 90%;
+    --github: 0 0% 20%;
 
-    --sidebar-background: 240 6% 10%;
-    --sidebar-foreground: 240 5% 96%;
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 240 10% 10%;
     --sidebar-primary: 263 70% 50%;
-    --sidebar-primary-foreground: 240 5% 96%;
-    --sidebar-accent: 240 4% 16%;
-    --sidebar-accent-foreground: 240 5% 96%;
-    --sidebar-border: 240 4% 20%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 5% 92%;
+    --sidebar-accent-foreground: 240 10% 10%;
+    --sidebar-border: 240 6% 85%;
     --sidebar-ring: 263 70% 50%;
   }
 
+  /* Dark Mode */
   .dark {
     --background: 222.2 84% 4.9%;
     --foreground: 240 5% 96%;
@@ -90,6 +92,9 @@
     --border: 240 4% 20%;
     --input: 240 4% 16%;
     --ring: 263 70% 50%;
+
+    --glass: 0 0% 100%;
+    --glass-border: 0 0% 100%;
 
     --sidebar-background: 240 6% 10%;
     --sidebar-foreground: 240 5% 96%;
