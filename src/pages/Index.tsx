@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Heart, Settings } from "lucide-react";
 import { motion } from "framer-motion";
 import ProfileHeader from "@/components/ProfileHeader";
@@ -8,6 +8,7 @@ import ContactDrawer from "@/components/ContactDrawer";
 import ThemeToggle from "@/components/ThemeToggle";
 import ShareButton from "@/components/ShareButton";
 import { useAuth } from "@/hooks/useAuth";
+import { useAnalytics } from "@/hooks/useAnalytics";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
@@ -51,6 +52,9 @@ const Index = () => {
   const [profile, setProfile] = useState<Profile>(DEFAULT_PROFILE);
   const [links, setLinks] = useState<SocialLink[]>(DEFAULT_LINKS);
   const [loading, setLoading] = useState(true);
+  const [profileUserId, setProfileUserId] = useState<string | undefined>();
+  const { trackView, trackClick } = useAnalytics(profileUserId);
+  const viewTracked = useRef(false);
 
   useEffect(() => {
     fetchData();
@@ -67,6 +71,7 @@ const Index = () => {
 
       if (profiles && profiles.length > 0) {
         const p = profiles[0];
+        setProfileUserId(p.id);
         setProfile({
           display_name: p.display_name || DEFAULT_PROFILE.display_name,
           bio: p.bio || DEFAULT_PROFILE.bio,
@@ -92,6 +97,18 @@ const Index = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  // Track page view once
+  useEffect(() => {
+    if (profileUserId && !viewTracked.current) {
+      viewTracked.current = true;
+      trackView();
+    }
+  }, [profileUserId, trackView]);
+
+  const handleLinkClick = (linkId: string, label: string) => {
+    trackClick(linkId, label);
   };
 
   return (
@@ -152,6 +169,7 @@ const Index = () => {
               label={link.label}
               href={link.url}
               index={index}
+              onClickTrack={() => handleLinkClick(link.id, link.label)}
             />
           ))}
         </div>
