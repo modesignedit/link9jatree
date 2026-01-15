@@ -162,7 +162,9 @@ const Auth = () => {
             <Button
               type="submit"
               disabled={isLoading}
-              className="w-full h-12 bg-gradient-to-r from-[#008751] to-emerald-500 hover:from-[#008751]/90 hover:to-emerald-500/90 text-white font-semibold rounded-xl shadow-lg shadow-[#008751]/30 transition-all duration-300"
+              variant="naija"
+              size="lg"
+              className="w-full"
             >
               {isLoading ? (
                 <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />

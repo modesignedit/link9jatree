@@ -98,14 +98,14 @@ const Landing = () => {
             )}
             {user ? (
               <Link to="/editor">
-                <Button size="sm" className="bg-gradient-to-r from-naija-green to-emerald-500 gap-2">
+                <Button variant="naija" size="sm" className="gap-2">
                   Dashboard
                   <ArrowRight className="w-4 h-4" />
                 </Button>
               </Link>
             ) : (
               <Link to="/auth">
-                <Button size="sm" className="bg-gradient-to-r from-naija-green to-emerald-500 gap-2">
+                <Button variant="naija" size="sm" className="gap-2">
                   Get Started
                   <Sparkles className="w-4 h-4" />
                 </Button>
@@ -142,16 +142,16 @@ const Landing = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="text-4xl sm:text-5xl md:text-7xl font-bold text-foreground mb-4 sm:mb-6 font-['Space_Grotesk'] leading-tight"
+            className="text-foreground mb-6 text-balance"
           >
             Your <span className="text-gradient">Digital Presence</span>
             <br />
-            <span className="inline-flex items-center gap-2 sm:gap-4">
+            <span className="inline-flex items-center gap-3 sm:gap-4">
               Made 
               <span className="relative inline-block">
                 <span className="relative z-10">Proper</span>
                 <motion.span 
-                  className="absolute -bottom-1 left-0 right-0 h-3 bg-gradient-to-r from-naija-green via-naija-light to-emerald-400 rounded-full opacity-50"
+                  className="absolute -bottom-1 left-0 right-0 h-2 sm:h-3 bg-gradient-to-r from-naija-green via-naija-light to-emerald-400 rounded-full opacity-50"
                   animate={{ scaleX: [0.8, 1, 0.8] }}
                   transition={{ duration: 2, repeat: Infinity }}
                 />
@@ -165,10 +165,10 @@ const Landing = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto mb-8 sm:mb-10 leading-relaxed"
+            className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed text-pretty"
           >
             The free link-in-bio built with love for Nigerian creators. 
-            <span className="text-foreground font-medium"> Custom themes, analytics, animations</span> — 
+            <span className="text-foreground font-semibold"> Custom themes, analytics, animations</span> — 
             e dey burst brain! No charge, no wahala.
           </motion.p>
 
@@ -180,7 +180,7 @@ const Landing = () => {
             className="flex flex-col sm:flex-row items-center justify-center gap-4"
           >
             <Link to={user ? "/editor" : "/auth"}>
-              <Button size="lg" className="w-full sm:w-auto bg-gradient-to-r from-naija-green via-emerald-500 to-naija-green bg-[length:200%_100%] hover:bg-[position:100%_0] transition-all duration-500 rounded-full px-8 h-14 text-lg gap-3 shadow-2xl shadow-naija-green/30">
+              <Button variant="naija" size="xl" className="w-full sm:w-auto rounded-full gap-3">
                 {user ? "Go to Dashboard" : "Start for Free"}
                 <ArrowRight className="w-5 h-5" />
               </Button>
@@ -227,10 +227,10 @@ const Landing = () => {
             viewport={{ once: true }}
             className="text-center mb-12 sm:mb-16"
           >
-            <h2 className="text-3xl sm:text-4xl font-bold text-foreground font-['Space_Grotesk'] mb-4">
+            <h2 className="text-foreground mb-4 text-balance">
               Features Wey <span className="text-naija-light">Slap</span> 💪
             </h2>
-            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+            <p className="text-muted-foreground text-lg max-w-2xl mx-auto text-pretty">
               Everything wey you need to make your online presence burst properly
             </p>
           </motion.div>
@@ -270,7 +270,7 @@ const Landing = () => {
             viewport={{ once: true }}
             className="text-center mb-12"
           >
-            <h2 className="text-3xl sm:text-4xl font-bold text-foreground font-['Space_Grotesk'] mb-4">
+            <h2 className="text-foreground mb-4 text-balance">
               Wetin Naija Dey <span className="text-naija-light">Talk</span> 🗣️
             </h2>
           </motion.div>
@@ -334,14 +334,14 @@ const Landing = () => {
                 <span className="text-3xl animate-flag-fly" style={{ animationDelay: '0.4s' }}>🇳🇬</span>
               </div>
               
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white font-['Space_Grotesk'] mb-4 sm:mb-6">
+              <h2 className="text-white mb-6 text-balance">
                 Ready to Blow? 🚀
               </h2>
               <p className="text-lg sm:text-xl text-white/80 max-w-xl mx-auto mb-8">
                 Join thousands of Naija creators wey don level up their online game.
               </p>
               <Link to={user ? "/editor" : "/auth"}>
-                <Button size="lg" className="bg-white text-naija-green hover:bg-white/90 rounded-full px-8 sm:px-12 h-14 text-lg font-semibold gap-3 shadow-2xl">
+                <Button size="xl" className="bg-white text-naija-green hover:bg-white/95 rounded-full gap-3 shadow-2xl hover:shadow-white/20">
                   {user ? "Open Dashboard" : "Start for Free - No Charge!"}
                   <ChevronRight className="w-5 h-5" />
                 </Button>
