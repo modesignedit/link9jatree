@@ -23,6 +23,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { PhonePreview } from "@/components/PhonePreview";
 import { LinkCardEditor } from "@/components/LinkCardEditor";
+import confetti from "canvas-confetti";
 
 interface Profile {
   display_name: string;
@@ -154,6 +155,14 @@ const Editor = () => {
 
         if (linksError) throw linksError;
       }
+
+      // Fire confetti celebration!
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.9 },
+        colors: ['#8B5CF6', '#EC4899', '#06B6D4', '#FBBF24', '#10B981']
+      });
 
       toast.success("Saved! Your page is live ✨", {
         icon: "🎉",
