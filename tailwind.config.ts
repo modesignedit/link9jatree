@@ -125,7 +125,7 @@ export default {
         "live-pulse": "live-pulse 1.5s ease-in-out infinite",
         "gradient-rotate": "gradient-rotate 3s ease infinite",
         "spin-slow": "spin-slow 8s linear infinite",
-        "float": "float 3s ease-in-out infinite",
+        "float": "float 6s ease-in-out infinite",
         "shimmer": "shimmer 2s linear infinite",
       },
       backgroundSize: {
