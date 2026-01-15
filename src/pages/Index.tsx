@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useMemo } from "react";
 import { Heart, Settings } from "lucide-react";
 import { motion } from "framer-motion";
 import ProfileHeader from "@/components/ProfileHeader";
@@ -7,11 +7,15 @@ import SupportSection from "@/components/SupportSection";
 import ContactDrawer from "@/components/ContactDrawer";
 import ThemeToggle from "@/components/ThemeToggle";
 import ShareButton from "@/components/ShareButton";
+import ParticleBackground from "@/components/ParticleBackground";
+import AnimatedOrbs from "@/components/AnimatedOrbs";
 import { useAuth } from "@/hooks/useAuth";
 import { useAnalytics } from "@/hooks/useAnalytics";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import type { BackgroundEffects } from "@/components/BackgroundPicker";
 
 interface Profile {
   display_name: string;
@@ -23,6 +27,7 @@ interface Profile {
   background_type: string;
   background_value: string;
   background_image_url: string;
+  background_effects: BackgroundEffects;
 }
 
 interface SocialLink {
@@ -32,6 +37,13 @@ interface SocialLink {
   url: string;
   display_order: number;
 }
+
+const DEFAULT_EFFECTS: BackgroundEffects = {
+  particles: false,
+  orbs: true,
+  gradientMorph: false,
+  shimmer: false,
+};
 
 // Default fallback data
 const DEFAULT_PROFILE: Profile = {
@@ -44,6 +56,7 @@ const DEFAULT_PROFILE: Profile = {
   background_type: "gradient",
   background_value: "aurora",
   background_image_url: "",
+  background_effects: DEFAULT_EFFECTS,
 };
 
 const DEFAULT_LINKS: SocialLink[] = [
@@ -55,12 +68,19 @@ const DEFAULT_LINKS: SocialLink[] = [
 
 const Index = () => {
   const { user } = useAuth();
+  const isMobile = useIsMobile();
   const [profile, setProfile] = useState<Profile>(DEFAULT_PROFILE);
   const [links, setLinks] = useState<SocialLink[]>(DEFAULT_LINKS);
   const [loading, setLoading] = useState(true);
   const [profileUserId, setProfileUserId] = useState<string | undefined>();
   const { trackView, trackClick } = useAnalytics(profileUserId);
   const viewTracked = useRef(false);
+
+  // Check for reduced motion preference
+  const prefersReducedMotion = useMemo(() => {
+    if (typeof window === "undefined") return false;
+    return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  }, []);
 
   useEffect(() => {
     fetchData();
@@ -78,6 +98,10 @@ const Index = () => {
       if (profiles && profiles.length > 0) {
         const p = profiles[0];
         setProfileUserId(p.id);
+        
+        // Parse background effects from JSONB
+        const effects = (p.background_effects as unknown as BackgroundEffects) || DEFAULT_EFFECTS;
+        
         setProfile({
           display_name: p.display_name || DEFAULT_PROFILE.display_name,
           bio: p.bio || DEFAULT_PROFILE.bio,
@@ -88,6 +112,7 @@ const Index = () => {
           background_type: p.background_type || "gradient",
           background_value: p.background_value || "aurora",
           background_image_url: p.background_image_url || "",
+          background_effects: effects,
         });
 
         // Fetch links for this profile
@@ -143,11 +168,19 @@ const Index = () => {
     return "";
   };
 
+  const effects = profile.background_effects || DEFAULT_EFFECTS;
+  const showAnimations = !prefersReducedMotion;
+
   return (
     <div 
       className={`min-h-screen relative overflow-hidden transition-colors duration-300 safe-area-top safe-area-bottom ${getBackgroundClass()}`}
       style={getBackgroundStyle()}
     >
+      {/* Gradient morph animation */}
+      {showAnimations && effects.gradientMorph && profile.background_type === "gradient" && (
+        <div className="absolute inset-0 bg-gradient-morph opacity-60" />
+      )}
+
       {/* Aurora overlay for gradients */}
       {profile.background_type === "gradient" && (
         <div className="absolute inset-0 aurora-bg aurora-animated opacity-70" />
@@ -162,10 +195,29 @@ const Index = () => {
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(120,80,200,0.08),transparent_50%)]" />
       <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4wMiI+PGNpcmNsZSBjeD0iMzAiIGN5PSIzMCIgcj0iMSIvPjwvZz48L2c+PC9zdmc+')] opacity-50" />
       
-      {/* Floating decorative orbs - hidden on mobile for performance */}
-      <div className="hidden sm:block absolute top-20 left-10 w-32 h-32 bg-primary/20 rounded-full blur-3xl float opacity-50" />
-      <div className="hidden sm:block absolute bottom-40 right-10 w-40 h-40 bg-pink-500/15 rounded-full blur-3xl float-delayed opacity-50" />
-      <div className="hidden sm:block absolute top-1/2 left-1/4 w-24 h-24 bg-blue-500/10 rounded-full blur-2xl float-delayed opacity-50" />
+      {/* Particle system */}
+      {showAnimations && effects.particles && (
+        <ParticleBackground particleCount={isMobile ? 20 : 40} />
+      )}
+
+      {/* Animated orbs */}
+      {showAnimations && effects.orbs && !isMobile && (
+        <AnimatedOrbs />
+      )}
+
+      {/* Fallback static orbs for mobile or when animated orbs are disabled */}
+      {(!effects.orbs || isMobile) && (
+        <>
+          <div className="hidden sm:block absolute top-20 left-10 w-32 h-32 bg-primary/20 rounded-full blur-3xl float opacity-50" />
+          <div className="hidden sm:block absolute bottom-40 right-10 w-40 h-40 bg-pink-500/15 rounded-full blur-3xl float-delayed opacity-50" />
+          <div className="hidden sm:block absolute top-1/2 left-1/4 w-24 h-24 bg-blue-500/10 rounded-full blur-2xl float-delayed opacity-50" />
+        </>
+      )}
+
+      {/* Shimmer effect */}
+      {showAnimations && effects.shimmer && (
+        <div className="absolute inset-0 shimmer-overlay pointer-events-none z-[1]" />
+      )}
 
       {/* Top bar with theme toggle and edit button */}
       <div className="absolute top-3 sm:top-4 left-3 sm:left-4 right-3 sm:right-4 z-10 flex justify-between items-center">
@@ -189,7 +241,7 @@ const Index = () => {
         )}
       </div>
       
-      <div className="relative max-w-md mx-auto px-4 sm:px-6 py-16 sm:py-20 flex flex-col gap-6 sm:gap-8">
+      <div className="relative max-w-md mx-auto px-4 sm:px-6 py-16 sm:py-20 flex flex-col gap-6 sm:gap-8 z-[2]">
         <ProfileHeader 
           displayName={profile.display_name}
           bio={profile.bio}
