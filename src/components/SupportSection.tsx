@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Bitcoin, Wallet, Sparkles, Copy, Check } from "lucide-react";
+import QRCode from "react-qr-code";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -121,6 +122,30 @@ const SupportSection = ({ btcAddress, usdtAddress }: SupportSectionProps) => {
           </DialogHeader>
 
           <div className="space-y-4 py-4">
+            {/* QR Code */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.1, type: "spring", duration: 0.5 }}
+              className="flex justify-center"
+            >
+              <div className={`p-4 bg-white rounded-2xl border-4 shadow-lg ${
+                selectedWallet === "btc" ? "border-btc/30" : "border-usdt/30"
+              }`}>
+                <QRCode
+                  value={currentAddress || ""}
+                  size={160}
+                  level="M"
+                  bgColor="#ffffff"
+                  fgColor="#000000"
+                />
+              </div>
+            </motion.div>
+            
+            <p className="text-xs text-center text-muted-foreground">
+              Scan with your wallet app
+            </p>
+
             {/* Address Display */}
             <div 
               className={`p-4 rounded-xl border ${
