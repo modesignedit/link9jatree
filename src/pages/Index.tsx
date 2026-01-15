@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef, useMemo } from "react";
-import { Heart, Settings, Download } from "lucide-react";
+import { Heart, Settings, Download, Github } from "lucide-react";
 import { motion } from "framer-motion";
 import ProfileHeader from "@/components/ProfileHeader";
 import LinkCard from "@/components/LinkCard";
@@ -305,8 +305,19 @@ const Index = () => {
           )}
           
           <p className="text-[11px] sm:text-xs text-muted-foreground/60 flex items-center justify-center gap-1.5">
-            Made with <Heart className="w-3 h-3 text-live fill-live" /> by {profile.display_name}
+            Made with <Heart className="w-3 h-3 text-naija-green fill-naija-green" /> for Naija 🇳🇬
           </p>
+          
+          {/* GitHub Credit */}
+          <a
+            href="https://github.com/modesignedit"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 mt-2 text-[11px] sm:text-xs text-muted-foreground/50 hover:text-naija-light transition-colors"
+          >
+            <Github className="w-3 h-3" />
+            by @modesignedit
+          </a>
           
           <div className="flex items-center justify-center gap-4 mt-3">
             <Link 
@@ -325,7 +336,7 @@ const Index = () => {
             ) : (
               <Link 
                 to="/editor" 
-                className="text-[11px] sm:text-xs text-primary/60 hover:text-primary transition-colors"
+                className="text-[11px] sm:text-xs text-naija-green/60 hover:text-naija-green transition-colors"
               >
                 Edit Profile →
               </Link>

@@ -79,13 +79,16 @@ const PWAInstallPrompt = () => {
             </button>
 
             <div className="flex items-start gap-3 mb-4">
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-pink-600 flex items-center justify-center flex-shrink-0">
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#008751] to-emerald-500 flex items-center justify-center flex-shrink-0">
                 <Smartphone className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h3 className="font-semibold text-foreground">Install LinkBio</h3>
+                <h3 className="font-semibold text-foreground flex items-center gap-2">
+                  Install Link9jtree
+                  <span className="text-xs px-1.5 py-0.5 rounded bg-[#008751]/20 text-[#00A86B]">FREE</span>
+                </h3>
                 <p className="text-xs text-muted-foreground mt-0.5">
-                  Add to your home screen for the best experience
+                  Add to your home screen for the best experience 🇳🇬
                 </p>
               </div>
             </div>
@@ -117,7 +120,7 @@ const PWAInstallPrompt = () => {
               <Button
                 size="sm"
                 onClick={handleInstall}
-                className="flex-1 bg-gradient-to-r from-primary to-pink-600 gap-2"
+                className="flex-1 bg-gradient-to-r from-[#008751] to-emerald-500 gap-2"
               >
                 <Download className="w-4 h-4" />
                 Install

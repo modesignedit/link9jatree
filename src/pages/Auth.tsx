@@ -92,16 +92,16 @@ const Auth = () => {
           {/* Header */}
           <div className="text-center mb-8">
             <div className="inline-flex items-center gap-2 mb-4">
-              <Sparkles className="w-6 h-6 text-primary" />
+              <span className="text-2xl">🇳🇬</span>
               <h1 className="text-2xl font-bold text-foreground">
-                {isLogin ? "Welcome Back" : "Create Account"}
+                {isLogin ? "Welcome Back" : "Join Link9jtree"}
               </h1>
-              <Sparkles className="w-6 h-6 text-primary" />
+              <Sparkles className="w-6 h-6 text-[#008751]" />
             </div>
             <p className="text-muted-foreground text-sm">
               {isLogin
                 ? "Sign in to manage your link-in-bio page"
-                : "Sign up to create your personalized page"}
+                : "The free link-in-bio for Naija creators 💚"}
             </p>
           </div>
 
@@ -157,7 +157,7 @@ const Auth = () => {
             <Button
               type="submit"
               disabled={isLoading}
-              className="w-full h-12 bg-gradient-to-r from-primary to-pink-600 hover:from-primary/90 hover:to-pink-600/90 text-white font-semibold rounded-xl shadow-lg shadow-primary/30 transition-all duration-300"
+              className="w-full h-12 bg-gradient-to-r from-[#008751] to-emerald-500 hover:from-[#008751]/90 hover:to-emerald-500/90 text-white font-semibold rounded-xl shadow-lg shadow-[#008751]/30 transition-all duration-300"
             >
               {isLoading ? (
                 <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
