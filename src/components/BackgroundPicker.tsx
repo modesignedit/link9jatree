@@ -1,16 +1,25 @@
 import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Palette, Image, Upload, Check, Loader2, X } from "lucide-react";
+import { Palette, Image, Upload, Check, Loader2, X, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+
+export interface BackgroundEffects {
+  particles: boolean;
+  orbs: boolean;
+  gradientMorph: boolean;
+  shimmer: boolean;
+}
 
 interface BackgroundPickerProps {
   userId: string;
   backgroundType: string;
   backgroundValue: string;
   backgroundImageUrl: string;
-  onChange: (type: string, value: string, imageUrl?: string) => void;
+  backgroundEffects?: BackgroundEffects;
+  onChange: (type: string, value: string, imageUrl?: string, effects?: BackgroundEffects) => void;
 }
 
 const GRADIENT_PRESETS = [
@@ -31,14 +40,22 @@ const SOLID_COLORS = [
   { id: "blue", name: "Blue", color: "#172554" },
 ];
 
+const DEFAULT_EFFECTS: BackgroundEffects = {
+  particles: false,
+  orbs: true,
+  gradientMorph: false,
+  shimmer: false,
+};
+
 const BackgroundPicker = ({
   userId,
   backgroundType,
   backgroundValue,
   backgroundImageUrl,
+  backgroundEffects = DEFAULT_EFFECTS,
   onChange,
 }: BackgroundPickerProps) => {
-  const [activeTab, setActiveTab] = useState<"gradient" | "solid" | "image">(
+  const [activeTab, setActiveTab] = useState<"gradient" | "solid" | "image" | "effects">(
     backgroundType as "gradient" | "solid" | "image" || "gradient"
   );
   const [uploading, setUploading] = useState(false);
@@ -74,7 +91,7 @@ const BackgroundPicker = ({
         .from("avatars")
         .getPublicUrl(filePath);
 
-      onChange("image", "custom", publicUrl);
+      onChange("image", "custom", publicUrl, backgroundEffects);
       toast.success("Background uploaded! 🎨");
     } catch (error) {
       console.error("Upload error:", error);
@@ -87,27 +104,59 @@ const BackgroundPicker = ({
     }
   };
 
+  const handleEffectToggle = (effect: keyof BackgroundEffects, value: boolean) => {
+    const newEffects = { ...backgroundEffects, [effect]: value };
+    onChange(backgroundType, backgroundValue, backgroundImageUrl, newEffects);
+  };
+
+  const EffectToggle = ({ 
+    label, 
+    description, 
+    effectKey,
+    icon: Icon
+  }: { 
+    label: string; 
+    description: string; 
+    effectKey: keyof BackgroundEffects;
+    icon?: React.ReactNode;
+  }) => (
+    <div className="flex items-center justify-between p-3 rounded-xl bg-white/5 border border-white/10 hover:border-white/20 transition-colors">
+      <div className="flex items-center gap-3">
+        {Icon && <div className="text-primary">{Icon}</div>}
+        <div>
+          <p className="text-sm font-medium text-foreground">{label}</p>
+          <p className="text-xs text-muted-foreground/70">{description}</p>
+        </div>
+      </div>
+      <Switch
+        checked={backgroundEffects[effectKey]}
+        onCheckedChange={(checked) => handleEffectToggle(effectKey, checked)}
+      />
+    </div>
+  );
+
   return (
     <div className="space-y-4">
       {/* Tab Buttons */}
-      <div className="flex gap-2">
+      <div className="flex gap-1.5 sm:gap-2">
         {[
           { id: "gradient", icon: Palette, label: "Gradients" },
           { id: "solid", icon: Palette, label: "Solid" },
           { id: "image", icon: Image, label: "Image" },
+          { id: "effects", icon: Sparkles, label: "Effects" },
         ].map((tab) => (
           <Button
             key={tab.id}
             variant={activeTab === tab.id ? "default" : "ghost"}
             size="sm"
             onClick={() => setActiveTab(tab.id as typeof activeTab)}
-            className={`flex-1 gap-2 h-10 text-xs sm:text-sm ${
+            className={`flex-1 gap-1.5 sm:gap-2 h-9 sm:h-10 text-[11px] sm:text-sm px-2 sm:px-3 ${
               activeTab === tab.id
                 ? "bg-primary/20 text-primary border border-primary/30"
                 : "bg-white/5 border border-white/10 text-muted-foreground"
             }`}
           >
-            <tab.icon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+            <tab.icon className="w-3 h-3 sm:w-4 sm:h-4" />
             <span className="hidden xs:inline">{tab.label}</span>
           </Button>
         ))}
@@ -126,7 +175,7 @@ const BackgroundPicker = ({
             {GRADIENT_PRESETS.map((preset) => (
               <button
                 key={preset.id}
-                onClick={() => onChange("gradient", preset.id)}
+                onClick={() => onChange("gradient", preset.id, backgroundImageUrl, backgroundEffects)}
                 className={`relative h-16 sm:h-20 rounded-xl overflow-hidden border-2 transition-all ${
                   backgroundType === "gradient" && backgroundValue === preset.id
                     ? "border-primary ring-2 ring-primary/30"
@@ -158,7 +207,7 @@ const BackgroundPicker = ({
             {SOLID_COLORS.map((color) => (
               <button
                 key={color.id}
-                onClick={() => onChange("solid", color.color)}
+                onClick={() => onChange("solid", color.color, backgroundImageUrl, backgroundEffects)}
                 className={`relative h-16 sm:h-20 rounded-xl overflow-hidden border-2 transition-all ${
                   backgroundType === "solid" && backgroundValue === color.color
                     ? "border-primary ring-2 ring-primary/30"
@@ -220,7 +269,7 @@ const BackgroundPicker = ({
                   <Button
                     size="sm"
                     variant="secondary"
-                    onClick={() => onChange("gradient", "aurora")}
+                    onClick={() => onChange("gradient", "aurora", undefined, backgroundEffects)}
                     className="bg-white/20 backdrop-blur-sm border-white/20"
                   >
                     <X className="w-4 h-4 mr-2" />
@@ -248,6 +297,44 @@ const BackgroundPicker = ({
                 )}
               </button>
             )}
+          </motion.div>
+        )}
+
+        {activeTab === "effects" && (
+          <motion.div
+            key="effects"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            className="space-y-2"
+          >
+            <EffectToggle
+              label="Floating Particles"
+              description="Subtle animated dots floating around"
+              effectKey="particles"
+              icon={<span className="text-lg">✨</span>}
+            />
+            <EffectToggle
+              label="Animated Orbs"
+              description="Dreamy blur spheres with motion"
+              effectKey="orbs"
+              icon={<span className="text-lg">🟣</span>}
+            />
+            <EffectToggle
+              label="Gradient Animation"
+              description="Morphing color transitions"
+              effectKey="gradientMorph"
+              icon={<span className="text-lg">🌈</span>}
+            />
+            <EffectToggle
+              label="Shimmer Effect"
+              description="Subtle light sweep animation"
+              effectKey="shimmer"
+              icon={<span className="text-lg">💫</span>}
+            />
+            <p className="text-xs text-muted-foreground/60 pt-2 text-center">
+              Effects are optimized for mobile and respect reduced motion preferences
+            </p>
           </motion.div>
         )}
       </AnimatePresence>

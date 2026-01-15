@@ -245,6 +245,60 @@
   }
 }
 
+/* Gradient morphing animation */
+@keyframes gradient-morph {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  25% {
+    background-position: 100% 50%;
+  }
+  50% {
+    background-position: 100% 100%;
+  }
+  75% {
+    background-position: 0% 100%;
+  }
+}
+
+.bg-gradient-morph {
+  background: linear-gradient(
+    -45deg,
+    hsl(263 70% 15%),
+    hsl(320 70% 15%),
+    hsl(200 70% 15%),
+    hsl(263 70% 15%)
+  );
+  background-size: 400% 400%;
+  animation: gradient-morph 15s ease infinite;
+}
+
+/* Shimmer overlay effect */
+@keyframes shimmer-sweep {
+  0%, 100% {
+    transform: translateX(-150%);
+  }
+  50% {
+    transform: translateX(150%);
+  }
+}
+
+.shimmer-overlay::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.03),
+    transparent
+  );
+  animation: shimmer-sweep 8s ease-in-out infinite;
+}
+
 /* Gen Z Editor utilities */
 .scrollbar-none {
   -ms-overflow-style: none;

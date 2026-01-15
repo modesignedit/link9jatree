@@ -82,6 +82,7 @@ export type Database = {
       profiles: {
         Row: {
           avatar_url: string | null
+          background_effects: Json | null
           background_image_url: string | null
           background_type: string | null
           background_value: string | null
@@ -96,6 +97,7 @@ export type Database = {
         }
         Insert: {
           avatar_url?: string | null
+          background_effects?: Json | null
           background_image_url?: string | null
           background_type?: string | null
           background_value?: string | null
@@ -110,6 +112,7 @@ export type Database = {
         }
         Update: {
           avatar_url?: string | null
+          background_effects?: Json | null
           background_image_url?: string | null
           background_type?: string | null
           background_value?: string | null

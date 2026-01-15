@@ -29,6 +29,8 @@ import AnalyticsDashboard from "@/components/AnalyticsDashboard";
 import BackgroundPicker from "@/components/BackgroundPicker";
 import confetti from "canvas-confetti";
 
+import type { BackgroundEffects } from "@/components/BackgroundPicker";
+
 interface Profile {
   display_name: string;
   bio: string;
@@ -39,6 +41,7 @@ interface Profile {
   background_type: string;
   background_value: string;
   background_image_url: string;
+  background_effects: BackgroundEffects;
 }
 
 interface SocialLink {
@@ -49,6 +52,13 @@ interface SocialLink {
   icon: string;
   display_order: number;
 }
+
+const DEFAULT_EFFECTS: BackgroundEffects = {
+  particles: false,
+  orbs: true,
+  gradientMorph: false,
+  shimmer: false,
+};
 
 const PLATFORM_OPTIONS = [
   { value: "portfolio", label: "Portfolio", icon: "Briefcase" },
@@ -81,6 +91,7 @@ const Editor = () => {
     background_type: "gradient",
     background_value: "aurora",
     background_image_url: "",
+    background_effects: DEFAULT_EFFECTS,
   });
   const [links, setLinks] = useState<SocialLink[]>([]);
 
@@ -107,6 +118,7 @@ const Editor = () => {
         .single();
 
       if (profileData) {
+        const effects = profileData.background_effects as unknown as BackgroundEffects || DEFAULT_EFFECTS;
         setProfile({
           display_name: profileData.display_name || "",
           bio: profileData.bio || "",
@@ -117,6 +129,7 @@ const Editor = () => {
           background_type: profileData.background_type || "gradient",
           background_value: profileData.background_value || "aurora",
           background_image_url: profileData.background_image_url || "",
+          background_effects: effects,
         });
       }
 
@@ -153,6 +166,7 @@ const Editor = () => {
           background_type: profile.background_type,
           background_value: profile.background_value,
           background_image_url: profile.background_image_url,
+          background_effects: JSON.parse(JSON.stringify(profile.background_effects)),
         })
         .eq("id", user.id);
 
@@ -498,12 +512,14 @@ const Editor = () => {
                 backgroundType={profile.background_type}
                 backgroundValue={profile.background_value}
                 backgroundImageUrl={profile.background_image_url}
-                onChange={(type, value, imageUrl) => {
+                backgroundEffects={profile.background_effects}
+                onChange={(type, value, imageUrl, effects) => {
                   setProfile({
                     ...profile,
                     background_type: type,
                     background_value: value,
                     background_image_url: imageUrl || profile.background_image_url,
+                    background_effects: effects || profile.background_effects,
                   });
                 }}
               />
