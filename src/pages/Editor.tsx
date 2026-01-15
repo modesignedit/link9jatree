@@ -26,6 +26,7 @@ import { PhonePreview } from "@/components/PhonePreview";
 import { LinkCardEditor } from "@/components/LinkCardEditor";
 import AvatarCropper from "@/components/AvatarCropper";
 import AnalyticsDashboard from "@/components/AnalyticsDashboard";
+import BackgroundPicker from "@/components/BackgroundPicker";
 import confetti from "canvas-confetti";
 
 interface Profile {
@@ -35,6 +36,9 @@ interface Profile {
   live_url: string;
   btc_address: string;
   usdt_address: string;
+  background_type: string;
+  background_value: string;
+  background_image_url: string;
 }
 
 interface SocialLink {
@@ -74,6 +78,9 @@ const Editor = () => {
     live_url: "",
     btc_address: "",
     usdt_address: "",
+    background_type: "gradient",
+    background_value: "aurora",
+    background_image_url: "",
   });
   const [links, setLinks] = useState<SocialLink[]>([]);
 
@@ -107,6 +114,9 @@ const Editor = () => {
           live_url: profileData.live_url || "",
           btc_address: profileData.btc_address || "",
           usdt_address: profileData.usdt_address || "",
+          background_type: profileData.background_type || "gradient",
+          background_value: profileData.background_value || "aurora",
+          background_image_url: profileData.background_image_url || "",
         });
       }
 
@@ -140,6 +150,9 @@ const Editor = () => {
           live_url: profile.live_url,
           btc_address: profile.btc_address,
           usdt_address: profile.usdt_address,
+          background_type: profile.background_type,
+          background_value: profile.background_value,
+          background_image_url: profile.background_image_url,
         })
         .eq("id", user.id);
 
@@ -468,7 +481,34 @@ const Editor = () => {
               </div>
             </motion.div>
 
-            {/* Your Links Section */}
+            {/* Background & Wallpaper Section */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.25 }}
+              className="glass-strong rounded-2xl sm:rounded-3xl p-4 sm:p-6"
+            >
+              <div className="flex items-center gap-2 sm:gap-3 mb-5 sm:mb-6">
+                <span className="text-xl sm:text-2xl">🎨</span>
+                <h2 className="text-lg sm:text-xl font-bold text-foreground tracking-tight">Background</h2>
+              </div>
+
+              <BackgroundPicker
+                userId={user?.id || ""}
+                backgroundType={profile.background_type}
+                backgroundValue={profile.background_value}
+                backgroundImageUrl={profile.background_image_url}
+                onChange={(type, value, imageUrl) => {
+                  setProfile({
+                    ...profile,
+                    background_type: type,
+                    background_value: value,
+                    background_image_url: imageUrl || profile.background_image_url,
+                  });
+                }}
+              />
+            </motion.div>
+
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
