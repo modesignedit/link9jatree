@@ -288,8 +288,8 @@ const Index = () => {
           transition={{ duration: 0.5, delay: 1 }}
           className="text-center pt-3 sm:pt-4 pb-6 sm:pb-8"
         >
-          {/* Separator */}
-          <div className="w-12 sm:w-16 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent mx-auto mb-3 sm:mb-4" />
+          {/* Nigerian stripe separator */}
+          <div className="naija-stripe-animated w-24 mx-auto mb-4" />
           
           {/* Install App Button */}
           {canInstall && (
@@ -305,7 +305,8 @@ const Index = () => {
           )}
           
           <p className="text-[11px] sm:text-xs text-muted-foreground/60 flex items-center justify-center gap-1.5">
-            Made with <Heart className="w-3 h-3 text-naija-green fill-naija-green" /> for Naija 🇳🇬
+            Made with <Heart className="w-3 h-3 text-naija-green fill-naija-green" /> for Naija 
+            <span className="animate-flag-sparkle">🇳🇬</span>
           </p>
           
           {/* GitHub Credit */}

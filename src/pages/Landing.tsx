@@ -83,14 +83,14 @@ const Landing = () => {
       <nav className="relative z-20 px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2 group">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-naija-green to-emerald-500 flex items-center justify-center shadow-lg shadow-naija-green/30 group-hover:scale-110 transition-transform">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-naija-green to-emerald-500 flex items-center justify-center shadow-lg shadow-naija-green/30 group-hover:scale-110 transition-transform animate-naija-pulse">
               <LinkIcon className="w-5 h-5 text-white" />
             </div>
             <span className="text-xl font-bold text-foreground font-['Space_Grotesk'] hidden sm:block">
               Link<span className="text-naija-green">9j</span>tree
             </span>
-            <span className="text-xs px-2 py-0.5 rounded-full bg-naija-green/20 text-naija-light font-medium hidden sm:block">
-              FREE 🇳🇬
+            <span className="text-xs px-2 py-0.5 rounded-full bg-naija-green/20 text-naija-light font-medium hidden sm:flex items-center gap-1">
+              FREE <span className="animate-flag-fly">🇳🇬</span>
             </span>
           </Link>
           
@@ -133,15 +133,23 @@ const Landing = () => {
       {/* Hero Section */}
       <section className="relative z-10 px-4 sm:px-6 lg:px-8 pt-12 sm:pt-20 pb-16 sm:pb-24">
         <div className="max-w-5xl mx-auto text-center">
+          {/* Nigerian stripe decoration */}
+          <motion.div
+            initial={{ scaleX: 0 }}
+            animate={{ scaleX: 1 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="naija-stripe-animated w-32 mx-auto mb-6"
+          />
+
           {/* Badge */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-naija-green/20 border border-naija-green/30 text-naija-light text-sm font-medium mb-6 sm:mb-8"
           >
-            <span className="text-lg">🇳🇬</span>
+            <span className="text-lg animate-flag-fly">🇳🇬</span>
             <span>Free Forever for Naija Creators</span>
-            <span className="text-lg">✨</span>
+            <span className="text-lg animate-flag-sparkle">✨</span>
           </motion.div>
 
           {/* Main Heading */}
@@ -340,6 +348,13 @@ const Landing = () => {
             <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4wNSI+PGNpcmNsZSBjeD0iMzAiIGN5PSIzMCIgcj0iMiIvPjwvZz48L2c+PC9zdmc+')] opacity-50" />
             
             <div className="relative p-8 sm:p-12 md:p-16 text-center">
+              {/* Animated flag decoration */}
+              <div className="flex justify-center gap-4 mb-4">
+                <span className="text-3xl animate-flag-fly" style={{ animationDelay: '0s' }}>🇳🇬</span>
+                <span className="text-3xl animate-flag-fly" style={{ animationDelay: '0.2s' }}>🇳🇬</span>
+                <span className="text-3xl animate-flag-fly" style={{ animationDelay: '0.4s' }}>🇳🇬</span>
+              </div>
+              
               <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white font-['Space_Grotesk'] mb-4 sm:mb-6">
                 Ready to Blow? 🚀
               </h2>
@@ -352,8 +367,8 @@ const Landing = () => {
                   <ChevronRight className="w-5 h-5" />
                 </Button>
               </Link>
-              <p className="text-sm text-white/60 mt-4">
-                100% free for Nigerians 🇳🇬 • Set up in 60 seconds
+              <p className="text-sm text-white/60 mt-4 flex items-center justify-center gap-2">
+                100% free for Nigerians <span className="animate-flag-sparkle">🇳🇬</span> • Set up in 60 seconds
               </p>
             </div>
           </div>
@@ -363,17 +378,20 @@ const Landing = () => {
       {/* Footer */}
       <footer className="relative z-10 px-4 sm:px-6 lg:px-8 py-8 sm:py-12 border-t border-white/10">
         <div className="max-w-6xl mx-auto">
+          {/* Nigerian stripe at top of footer */}
+          <div className="naija-stripe-animated w-full max-w-md mx-auto mb-8" />
+          
           <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
             {/* Logo */}
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-naija-green to-emerald-500 flex items-center justify-center">
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-naija-green to-emerald-500 flex items-center justify-center animate-naija-pulse">
                 <LinkIcon className="w-4 h-4 text-white" />
               </div>
               <span className="font-bold text-foreground font-['Space_Grotesk']">
                 Link<span className="text-naija-green">9j</span>tree
               </span>
-              <span className="text-xs px-2 py-0.5 rounded-full bg-naija-green/20 text-naija-light font-medium">
-                FREE
+              <span className="text-xs px-2 py-0.5 rounded-full bg-naija-green/20 text-naija-light font-medium flex items-center gap-1">
+                FREE <span className="animate-flag-sparkle">🇳🇬</span>
               </span>
             </div>
             
@@ -407,8 +425,13 @@ const Landing = () => {
           </div>
           
           <div className="mt-6 text-center">
-            <p className="text-sm text-muted-foreground">
-              Made with 💚 for Nigerian creators 🇳🇬
+            <p className="text-sm text-muted-foreground flex items-center justify-center gap-2">
+              Made with 💚 for Nigerian creators 
+              <span className="inline-flex gap-1">
+                <span className="animate-flag-fly" style={{ animationDelay: '0s' }}>🇳🇬</span>
+                <span className="animate-flag-fly" style={{ animationDelay: '0.15s' }}>🇳🇬</span>
+                <span className="animate-flag-fly" style={{ animationDelay: '0.3s' }}>🇳🇬</span>
+              </span>
             </p>
           </div>
         </div>
