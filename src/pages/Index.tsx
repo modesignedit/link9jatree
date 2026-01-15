@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef, useMemo } from "react";
-import { Heart, Settings } from "lucide-react";
+import { Heart, Settings, Download } from "lucide-react";
 import { motion } from "framer-motion";
 import ProfileHeader from "@/components/ProfileHeader";
 import LinkCard from "@/components/LinkCard";
@@ -12,6 +12,7 @@ import AnimatedOrbs from "@/components/AnimatedOrbs";
 import { useAuth } from "@/hooks/useAuth";
 import { useAnalytics } from "@/hooks/useAnalytics";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { usePWA } from "@/hooks/usePWA";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
@@ -69,6 +70,7 @@ const DEFAULT_LINKS: SocialLink[] = [
 const Index = () => {
   const { user } = useAuth();
   const isMobile = useIsMobile();
+  const { canInstall, installApp } = usePWA();
   const [profile, setProfile] = useState<Profile>(DEFAULT_PROFILE);
   const [links, setLinks] = useState<SocialLink[]>(DEFAULT_LINKS);
   const [loading, setLoading] = useState(true);
@@ -282,6 +284,19 @@ const Index = () => {
         >
           {/* Separator */}
           <div className="w-12 sm:w-16 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent mx-auto mb-3 sm:mb-4" />
+          
+          {/* Install App Button */}
+          {canInstall && (
+            <Button
+              onClick={installApp}
+              variant="ghost"
+              size="sm"
+              className="mb-3 text-muted-foreground/70 hover:text-foreground gap-2"
+            >
+              <Download className="w-3.5 h-3.5" />
+              Install App
+            </Button>
+          )}
           
           <p className="text-[11px] sm:text-xs text-muted-foreground/60 flex items-center justify-center gap-1.5">
             Made with <Heart className="w-3 h-3 text-live fill-live" /> by {profile.display_name}
