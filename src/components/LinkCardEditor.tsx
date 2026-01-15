@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import { Trash2, GripVertical, ExternalLink } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -90,13 +89,8 @@ export const LinkCardEditor = ({
   const emoji = PLATFORM_EMOJI[link.platform] || "🔗";
 
   return (
-    <motion.div
-      layout
-      initial={{ opacity: 0, scale: 0.95 }}
-      animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.95, x: -20 }}
-      whileHover={{ scale: 1.01 }}
-      className={`${styles.bg} ${styles.border} border-2 rounded-2xl p-4 transition-all duration-300`}
+    <div
+      className={`${styles.bg} ${styles.border} border-2 rounded-2xl p-4 transition-all duration-300 hover:scale-[1.01]`}
     >
       {/* Header with platform and delete */}
       <div className="flex items-center justify-between mb-3">
@@ -122,13 +116,11 @@ export const LinkCardEditor = ({
           </Select>
         </div>
         <div className="flex items-center gap-1">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-8 w-8 text-muted-foreground hover:text-foreground cursor-grab active:cursor-grabbing"
+          <div
+            className="h-8 w-8 flex items-center justify-center text-muted-foreground hover:text-foreground cursor-grab active:cursor-grabbing touch-none"
           >
             <GripVertical className="w-4 h-4" />
-          </Button>
+          </div>
           <Button
             variant="ghost"
             size="icon"
@@ -167,6 +159,6 @@ export const LinkCardEditor = ({
           )}
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 };

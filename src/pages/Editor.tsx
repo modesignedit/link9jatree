@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, Reorder } from "framer-motion";
 import {
   Save,
   LogOut,
@@ -384,7 +384,6 @@ const Editor = () => {
                 </Button>
               </div>
 
-              <AnimatePresence mode="popLayout">
                 {links.length === 0 ? (
                   <motion.div
                     initial={{ opacity: 0 }}
@@ -398,19 +397,38 @@ const Editor = () => {
                     </p>
                   </motion.div>
                 ) : (
-                  <div className="space-y-3">
-                    {links.map((link) => (
-                      <LinkCardEditor
-                        key={link.id}
-                        link={link}
-                        onUpdate={updateLink}
-                        onRemove={removeLink}
-                        platformOptions={PLATFORM_OPTIONS}
-                      />
-                    ))}
-                  </div>
+                  <Reorder.Group
+                    axis="y"
+                    values={links}
+                    onReorder={setLinks}
+                    className="space-y-3"
+                  >
+                    <AnimatePresence mode="popLayout">
+                      {links.map((link) => (
+                        <Reorder.Item
+                          key={link.id}
+                          value={link}
+                          initial={{ opacity: 0, scale: 0.95 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          exit={{ opacity: 0, scale: 0.95, x: -20 }}
+                          whileDrag={{
+                            scale: 1.02,
+                            boxShadow: "0 20px 40px -10px rgba(0,0,0,0.5)",
+                            zIndex: 50,
+                          }}
+                          className="cursor-default"
+                        >
+                          <LinkCardEditor
+                            link={link}
+                            onUpdate={updateLink}
+                            onRemove={removeLink}
+                            platformOptions={PLATFORM_OPTIONS}
+                          />
+                        </Reorder.Item>
+                      ))}
+                    </AnimatePresence>
+                  </Reorder.Group>
                 )}
-              </AnimatePresence>
             </motion.div>
 
             {/* Get Paid Section */}
