@@ -91,8 +91,11 @@ const Auth = () => {
         <div className="glass-strong rounded-2xl sm:rounded-3xl p-6 sm:p-8 shadow-2xl shadow-primary/20">
           {/* Header */}
           <div className="text-center mb-8">
+            {/* Nigerian stripe decoration */}
+            <div className="naija-stripe-animated w-24 mx-auto mb-4" />
+            
             <div className="inline-flex items-center gap-2 mb-4">
-              <span className="text-2xl">🇳🇬</span>
+              <span className="text-2xl animate-flag-fly">🇳🇬</span>
               <h1 className="text-2xl font-bold text-foreground">
                 {isLogin ? "Welcome Back" : "Join Link9jtree"}
               </h1>
