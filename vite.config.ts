@@ -13,6 +13,20 @@ export default defineConfig(({ mode }) => ({
       overlay: false,
     },
   },
+  // Production build optimizations
+  build: {
+    target: "esnext",
+    minify: "esbuild",
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          "vendor-react": ["react", "react-dom"],
+          "vendor-motion": ["framer-motion"],
+          "vendor-router": ["react-router-dom"],
+        },
+      },
+    },
+  },
   plugins: [
     react(),
     mode === "development" && componentTagger(),
@@ -104,6 +118,19 @@ export default defineConfig(({ mode }) => ({
                 maxEntries: 60,
                 maxAgeSeconds: 60 * 60 * 24 * 30, // 30 days
               },
+            },
+          },
+          // Supabase API caching for faster repeat loads
+          {
+            urlPattern: /^https:\/\/dgaywbyeqqlrkgkbgpay\.supabase\.co\/.*/i,
+            handler: "NetworkFirst",
+            options: {
+              cacheName: "supabase-api-cache",
+              expiration: {
+                maxEntries: 50,
+                maxAgeSeconds: 60 * 5, // 5 minutes
+              },
+              networkTimeoutSeconds: 10,
             },
           },
         ],

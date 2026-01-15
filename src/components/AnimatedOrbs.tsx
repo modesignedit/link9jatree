@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { motion } from "framer-motion";
 import { useIsMobile } from "@/hooks/use-mobile";
 
@@ -14,6 +14,8 @@ interface OrbConfig {
 
 const AnimatedOrbs = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [isVisible, setIsVisible] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
   const isMobile = useIsMobile();
 
   const orbs: OrbConfig[] = [
@@ -23,9 +25,25 @@ const AnimatedOrbs = () => {
     { id: 4, size: 160, color: "from-fuchsia-500/25 to-purple-600/20", initialX: "80%", initialY: "30%", delay: 3, duration: 22 },
   ];
 
-  // Only track mouse on desktop
+  // Intersection Observer - only animate when visible
   useEffect(() => {
-    if (isMobile) return;
+    const container = containerRef.current;
+    if (!container) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsVisible(entry.isIntersecting);
+      },
+      { threshold: 0.1 }
+    );
+
+    observer.observe(container);
+    return () => observer.disconnect();
+  }, []);
+
+  // Only track mouse on desktop and when visible
+  useEffect(() => {
+    if (isMobile || !isVisible) return;
 
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (prefersReducedMotion) return;
@@ -37,9 +55,9 @@ const AnimatedOrbs = () => {
       });
     };
 
-    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mousemove", handleMouseMove, { passive: true });
     return () => window.removeEventListener("mousemove", handleMouseMove);
-  }, [isMobile]);
+  }, [isMobile, isVisible]);
 
   // Check for reduced motion
   const prefersReducedMotion = typeof window !== "undefined" 
@@ -51,8 +69,8 @@ const AnimatedOrbs = () => {
   }
 
   return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
-      {orbs.map((orb) => (
+    <div ref={containerRef} className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+      {isVisible && orbs.map((orb) => (
         <motion.div
           key={orb.id}
           initial={{
