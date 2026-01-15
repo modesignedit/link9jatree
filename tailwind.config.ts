@@ -57,6 +57,12 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        glass: "hsl(var(--glass))",
+        glow: "hsl(var(--glow))",
+        live: "hsl(var(--live))",
+        verified: "hsl(var(--verified))",
+        btc: "hsl(var(--btc))",
+        usdt: "hsl(var(--usdt))",
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -65,25 +71,45 @@ export default {
       },
       keyframes: {
         "accordion-down": {
-          from: {
-            height: "0",
-          },
-          to: {
-            height: "var(--radix-accordion-content-height)",
-          },
+          from: { height: "0" },
+          to: { height: "var(--radix-accordion-content-height)" },
         },
         "accordion-up": {
-          from: {
-            height: "var(--radix-accordion-content-height)",
+          from: { height: "var(--radix-accordion-content-height)" },
+          to: { height: "0" },
+        },
+        "pulse-glow": {
+          "0%, 100%": { 
+            boxShadow: "0 0 20px hsl(263 70% 50% / 0.4)",
+            borderColor: "hsl(263 70% 50% / 0.6)"
           },
-          to: {
-            height: "0",
+          "50%": { 
+            boxShadow: "0 0 40px hsl(263 70% 50% / 0.8)",
+            borderColor: "hsl(263 70% 50% / 1)"
           },
+        },
+        "live-pulse": {
+          "0%, 100%": { 
+            transform: "scale(1)",
+            opacity: "1"
+          },
+          "50%": { 
+            transform: "scale(1.05)",
+            opacity: "0.8"
+          },
+        },
+        "gradient-rotate": {
+          "0%": { backgroundPosition: "0% 50%" },
+          "50%": { backgroundPosition: "100% 50%" },
+          "100%": { backgroundPosition: "0% 50%" },
         },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "pulse-glow": "pulse-glow 2s ease-in-out infinite",
+        "live-pulse": "live-pulse 1.5s ease-in-out infinite",
+        "gradient-rotate": "gradient-rotate 3s ease infinite",
       },
     },
   },
