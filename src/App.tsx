@@ -10,6 +10,7 @@ import PWAInstallPrompt from "@/components/PWAInstallPrompt";
 import Landing from "./pages/Landing";
 import Auth from "./pages/Auth";
 import Install from "./pages/Install";
+import Demo from "./pages/Demo";
 import NotFound from "./pages/NotFound";
 
 // Lazy load heavy Editor page for better initial load
@@ -41,6 +42,7 @@ const App = () => (
                 <Route path="/auth" element={<Auth />} />
                 <Route path="/editor" element={<Editor />} />
                 <Route path="/install" element={<Install />} />
+                <Route path="/demo" element={<Demo />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>

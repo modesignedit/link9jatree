@@ -179,6 +179,12 @@ const Landing = () => {
                 <ArrowRight className="w-5 h-5" />
               </Button>
             </Link>
+            <Link to="/demo">
+              <Button variant="outline" size="xl" className="w-full sm:w-auto rounded-full gap-3 border-white/20 hover:bg-white/10">
+                View Demo
+                <ExternalLink className="w-4 h-4" />
+              </Button>
+            </Link>
           </motion.div>
 
           {/* Social Proof */}
