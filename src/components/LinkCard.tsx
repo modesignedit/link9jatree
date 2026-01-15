@@ -17,6 +17,9 @@ interface LinkCardProps {
   label: string;
   href: string;
   index: number;
+  customColor?: string;
+  customIcon?: string;
+  animation?: string;
   onClickTrack?: () => void;
 }
 
@@ -29,6 +32,24 @@ const ICON_MAP: Record<string, LucideIcon> = {
   Youtube,
   Music2,
   Link: LinkIcon,
+};
+
+const EMOJI_MAP: Record<string, string> = {
+  rocket: "🚀",
+  star: "⭐",
+  fire: "🔥",
+  sparkles: "✨",
+  heart: "❤️",
+  lightning: "⚡",
+  globe: "🌍",
+  music: "🎵",
+  camera: "📷",
+  video: "🎬",
+  code: "💻",
+  book: "📚",
+  money: "💰",
+  crown: "👑",
+  diamond: "💎",
 };
 
 const PLATFORM_STYLES: Record<string, { 
@@ -87,16 +108,59 @@ const PLATFORM_STYLES: Record<string, {
   },
 };
 
-const LinkCard = ({ platform, label, href, index, onClickTrack }: LinkCardProps) => {
+// Animation class mappings
+const ANIMATION_CLASSES: Record<string, string> = {
+  none: "",
+  pulse: "animate-link-pulse",
+  bounce: "hover:animate-link-bounce",
+  shake: "hover:animate-link-shake",
+  glow: "animate-link-glow",
+  shine: "link-shine-effect",
+};
+
+const LinkCard = ({ 
+  platform, 
+  label, 
+  href, 
+  index, 
+  customColor, 
+  customIcon, 
+  animation = "none",
+  onClickTrack 
+}: LinkCardProps) => {
   const iconName = getIconForPlatform(platform);
   const Icon = ICON_MAP[iconName] || LinkIcon;
   const styles = PLATFORM_STYLES[platform] || PLATFORM_STYLES.custom;
+  const animationClass = ANIMATION_CLASSES[animation] || "";
+
+  // Get custom emoji if set
+  const customEmoji = customIcon ? EMOJI_MAP[customIcon] : null;
 
   const handleClick = () => {
     if (onClickTrack) {
       onClickTrack();
     }
   };
+
+  // Custom color styles
+  const customStyles = customColor ? {
+    '--custom-color': customColor,
+    '--custom-color-bg': `${customColor}20`,
+    '--custom-color-border': `${customColor}40`,
+    '--custom-color-glow': `${customColor}60`,
+  } as React.CSSProperties : {};
+
+  const customColorClasses = customColor
+    ? "border-[var(--custom-color-border)] hover:border-[var(--custom-color)] hover:shadow-[0_0_40px_var(--custom-color-glow)]"
+    : `${styles.hoverGlow} ${styles.hoverBg}`;
+
+  const customIconBgClasses = customColor
+    ? "group-hover:bg-[var(--custom-color-bg)]"
+    : styles.iconBg;
+
+  const customIconColorClasses = customColor
+    ? "group-hover:text-[var(--custom-color)]"
+    : styles.iconColor;
 
   return (
     <motion.a
@@ -109,14 +173,24 @@ const LinkCard = ({ platform, label, href, index, onClickTrack }: LinkCardProps)
       transition={{ duration: 0.4, delay: 0.15 * index }}
       whileHover={{ y: -4 }}
       whileTap={{ scale: 0.98 }}
-      className={`w-full flex items-center gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl sm:rounded-2xl glass-strong cursor-pointer group relative overflow-hidden transition-all duration-300 ${styles.hoverGlow} ${styles.hoverBg}`}
+      style={customStyles}
+      className={`w-full flex items-center gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl sm:rounded-2xl glass-strong cursor-pointer group relative overflow-hidden transition-all duration-300 ${customColorClasses} ${animationClass}`}
     >
+      {/* Shine effect overlay */}
+      {animation === "shine" && (
+        <div className="absolute inset-0 shine-sweep pointer-events-none" />
+      )}
+
       {/* Hover gradient overlay */}
       <div className="absolute inset-0 bg-gradient-to-r from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
       
       {/* Icon container */}
-      <div className={`relative w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-white/10 flex items-center justify-center transition-all duration-300 group-hover:scale-110 ${styles.iconBg}`}>
-        <Icon className={`w-4 h-4 sm:w-5 sm:h-5 text-foreground transition-colors duration-300 ${styles.iconColor}`} />
+      <div className={`relative w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-white/10 flex items-center justify-center transition-all duration-300 group-hover:scale-110 ${customIconBgClasses}`}>
+        {customEmoji ? (
+          <span className="text-lg sm:text-xl">{customEmoji}</span>
+        ) : (
+          <Icon className={`w-4 h-4 sm:w-5 sm:h-5 text-foreground transition-colors duration-300 ${customIconColorClasses}`} />
+        )}
       </div>
       
       {/* Label */}

@@ -129,7 +129,10 @@ export type Database = {
       }
       social_links: {
         Row: {
+          animation: string | null
           created_at: string
+          custom_color: string | null
+          custom_icon: string | null
           display_order: number
           icon: string
           id: string
@@ -139,7 +142,10 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          animation?: string | null
           created_at?: string
+          custom_color?: string | null
+          custom_icon?: string | null
           display_order?: number
           icon?: string
           id?: string
@@ -149,7 +155,10 @@ export type Database = {
           user_id: string
         }
         Update: {
+          animation?: string | null
           created_at?: string
+          custom_color?: string | null
+          custom_icon?: string | null
           display_order?: number
           icon?: string
           id?: string
