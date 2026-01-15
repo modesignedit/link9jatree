@@ -90,17 +90,17 @@ export const LinkCardEditor = ({
 
   return (
     <div
-      className={`${styles.bg} ${styles.border} border-2 rounded-2xl p-4 transition-all duration-300 hover:scale-[1.01]`}
+      className={`${styles.bg} ${styles.border} border-2 rounded-xl sm:rounded-2xl p-3 sm:p-4 transition-all duration-300 hover:scale-[1.01]`}
     >
       {/* Header with platform and delete */}
-      <div className="flex items-center justify-between mb-3">
-        <div className="flex items-center gap-2">
-          <span className="text-xl">{emoji}</span>
+      <div className="flex items-center justify-between mb-2.5 sm:mb-3">
+        <div className="flex items-center gap-1.5 sm:gap-2">
+          <span className="text-lg sm:text-xl">{emoji}</span>
           <Select
             value={link.platform}
             onValueChange={(value) => onUpdate(link.id, { platform: value })}
           >
-            <SelectTrigger className="w-[140px] bg-white/5 border-white/10 rounded-full text-sm h-8">
+            <SelectTrigger className="w-[120px] sm:w-[140px] bg-white/5 border-white/10 rounded-full text-xs sm:text-sm h-8">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -115,7 +115,7 @@ export const LinkCardEditor = ({
             </SelectContent>
           </Select>
         </div>
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-0.5 sm:gap-1">
           <div
             className="h-8 w-8 flex items-center justify-center text-muted-foreground hover:text-foreground cursor-grab active:cursor-grabbing touch-none"
           >
