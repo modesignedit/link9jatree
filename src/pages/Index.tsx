@@ -20,6 +20,9 @@ interface Profile {
   live_url: string;
   btc_address: string;
   usdt_address: string;
+  background_type: string;
+  background_value: string;
+  background_image_url: string;
 }
 
 interface SocialLink {
@@ -38,6 +41,9 @@ const DEFAULT_PROFILE: Profile = {
   live_url: "https://twitch.tv",
   btc_address: "bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh",
   usdt_address: "0x742d35Cc6634C0532925a3b844Bc9e7595f3B7E8",
+  background_type: "gradient",
+  background_value: "aurora",
+  background_image_url: "",
 };
 
 const DEFAULT_LINKS: SocialLink[] = [
@@ -79,6 +85,9 @@ const Index = () => {
           live_url: p.live_url || "",
           btc_address: p.btc_address || "",
           usdt_address: p.usdt_address || "",
+          background_type: p.background_type || "gradient",
+          background_value: p.background_value || "aurora",
+          background_image_url: p.background_image_url || "",
         });
 
         // Fetch links for this profile
@@ -111,10 +120,43 @@ const Index = () => {
     trackClick(linkId, label);
   };
 
+  // Generate background styles based on profile settings
+  const getBackgroundStyle = () => {
+    if (profile.background_type === "image" && profile.background_image_url) {
+      return {
+        backgroundImage: `url(${profile.background_image_url})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundAttachment: "fixed",
+      };
+    }
+    if (profile.background_type === "solid") {
+      return { backgroundColor: profile.background_value };
+    }
+    return {};
+  };
+
+  const getBackgroundClass = () => {
+    if (profile.background_type === "gradient") {
+      return `bg-${profile.background_value}`;
+    }
+    return "";
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-background dark:from-slate-950 dark:via-[#1a0b2e] dark:to-black relative overflow-hidden transition-colors duration-300">
-      {/* Aurora background effect */}
-      <div className="absolute inset-0 aurora-bg aurora-animated opacity-100 dark:opacity-100" />
+    <div 
+      className={`min-h-screen relative overflow-hidden transition-colors duration-300 safe-area-top safe-area-bottom ${getBackgroundClass()}`}
+      style={getBackgroundStyle()}
+    >
+      {/* Aurora overlay for gradients */}
+      {profile.background_type === "gradient" && (
+        <div className="absolute inset-0 aurora-bg aurora-animated opacity-70" />
+      )}
+      
+      {/* Dark overlay for image backgrounds */}
+      {profile.background_type === "image" && (
+        <div className="absolute inset-0 bg-black/40" />
+      )}
       
       {/* Background pattern overlay */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(120,80,200,0.08),transparent_50%)]" />

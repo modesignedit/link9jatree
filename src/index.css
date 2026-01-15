@@ -112,8 +112,41 @@
     @apply border-border;
   }
 
+  html {
+    scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
   body {
     @apply bg-background text-foreground antialiased;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-feature-settings: 'ss01' on, 'ss02' on, 'cv01' on;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+  }
+
+  /* Pro Typography Headings */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Space Grotesk', system-ui, sans-serif;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+
+  /* Touch-friendly defaults */
+  button, a, input, textarea, select {
+    touch-action: manipulation;
+  }
+
+  /* Safe area padding for notched devices */
+  .safe-area-top {
+    padding-top: env(safe-area-inset-top);
+  }
+
+  .safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
   }
 }
 
@@ -220,4 +253,47 @@
 
 .scrollbar-none::-webkit-scrollbar {
   display: none;
+}
+
+/* Background presets */
+.bg-aurora {
+  background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f0a1a 100%);
+}
+
+.bg-sunset {
+  background: linear-gradient(135deg, #431407 0%, #4c0519 50%, #0f172a 100%);
+}
+
+.bg-ocean {
+  background: linear-gradient(135deg, #0f172a 0%, #083344 50%, #1e3a5f 100%);
+}
+
+.bg-forest {
+  background: linear-gradient(135deg, #0f172a 0%, #052e16 50%, #14532d 100%);
+}
+
+.bg-midnight {
+  background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #2e1065 100%);
+}
+
+.bg-rose {
+  background: linear-gradient(135deg, #0f172a 0%, #4c0519 50%, #881337 100%);
+}
+
+/* Mobile optimizations */
+@media (max-width: 640px) {
+  html {
+    font-size: 15px;
+  }
+  
+  .glass-strong {
+    @apply bg-white/[0.06] backdrop-blur-xl;
+  }
+}
+
+/* Improved focus states for accessibility */
+@layer utilities {
+  .focus-ring {
+    @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background;
+  }
 }
