@@ -1,4 +1,4 @@
-import { useEffect, useRef, useCallback } from "react";
+import { useEffect, useRef, useCallback, useState, memo } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 interface Particle {
@@ -16,13 +16,16 @@ interface ParticleBackgroundProps {
   className?: string;
 }
 
-const ParticleBackground = ({ particleCount, className = "" }: ParticleBackgroundProps) => {
+const ParticleBackground = memo(({ particleCount, className = "" }: ParticleBackgroundProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const particlesRef = useRef<Particle[]>([]);
   const animationRef = useRef<number>();
   const isMobile = useIsMobile();
+  const [isInViewport, setIsInViewport] = useState(false);
   
-  const actualParticleCount = particleCount ?? (isMobile ? 20 : 40);
+  // Reduce particle count for better performance
+  const actualParticleCount = particleCount ?? (isMobile ? 15 : 25);
 
   const initParticles = useCallback((width: number, height: number) => {
     particlesRef.current = Array.from({ length: actualParticleCount }, () => ({
@@ -31,16 +34,32 @@ const ParticleBackground = ({ particleCount, className = "" }: ParticleBackgroun
       vx: (Math.random() - 0.5) * 0.3,
       vy: (Math.random() - 0.5) * 0.3,
       size: Math.random() * 2 + 1,
-      opacity: Math.random() * 0.5 + 0.2,
+      opacity: Math.random() * 0.4 + 0.1,
       hue: 260 + Math.random() * 60, // Purple to pink range
     }));
   }, [actualParticleCount]);
+
+  // Intersection Observer - only animate when visible in viewport
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsInViewport(entry.isIntersecting);
+      },
+      { threshold: 0.1 }
+    );
+
+    observer.observe(container);
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const ctx = canvas.getContext("2d");
+    const ctx = canvas.getContext("2d", { alpha: true });
     if (!ctx) return;
 
     // Check for reduced motion preference
@@ -48,7 +67,7 @@ const ParticleBackground = ({ particleCount, className = "" }: ParticleBackgroun
     if (prefersReducedMotion) return;
 
     const resizeCanvas = () => {
-      const dpr = window.devicePixelRatio || 1;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2); // Cap DPR at 2 for performance
       const rect = canvas.getBoundingClientRect();
       canvas.width = rect.width * dpr;
       canvas.height = rect.height * dpr;
@@ -59,16 +78,17 @@ const ParticleBackground = ({ particleCount, className = "" }: ParticleBackgroun
     };
 
     resizeCanvas();
-    window.addEventListener("resize", resizeCanvas);
+    window.addEventListener("resize", resizeCanvas, { passive: true });
 
-    let isVisible = true;
+    let isDocVisible = true;
     const handleVisibility = () => {
-      isVisible = !document.hidden;
+      isDocVisible = !document.hidden;
     };
     document.addEventListener("visibilitychange", handleVisibility);
 
     const animate = () => {
-      if (!isVisible) {
+      // Skip animation if not visible (document hidden OR not in viewport)
+      if (!isDocVisible || !isInViewport) {
         animationRef.current = requestAnimationFrame(animate);
         return;
       }
@@ -87,20 +107,12 @@ const ParticleBackground = ({ particleCount, className = "" }: ParticleBackgroun
         if (particle.y < 0) particle.y = rect.height;
         if (particle.y > rect.height) particle.y = 0;
 
-        // Slight drift for organic movement
-        particle.vx += (Math.random() - 0.5) * 0.01;
-        particle.vy += (Math.random() - 0.5) * 0.01;
-        
-        // Limit velocity
-        particle.vx = Math.max(-0.5, Math.min(0.5, particle.vx));
-        particle.vy = Math.max(-0.5, Math.min(0.5, particle.vy));
-
         // Draw particle with glow
         ctx.beginPath();
         ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
         ctx.fillStyle = `hsla(${particle.hue}, 70%, 60%, ${particle.opacity})`;
-        ctx.shadowBlur = 10;
-        ctx.shadowColor = `hsla(${particle.hue}, 70%, 60%, 0.5)`;
+        ctx.shadowBlur = 8;
+        ctx.shadowColor = `hsla(${particle.hue}, 70%, 60%, 0.4)`;
         ctx.fill();
         ctx.shadowBlur = 0;
       });
@@ -117,15 +129,19 @@ const ParticleBackground = ({ particleCount, className = "" }: ParticleBackgroun
         cancelAnimationFrame(animationRef.current);
       }
     };
-  }, [initParticles]);
+  }, [initParticles, isInViewport]);
 
   return (
-    <canvas
-      ref={canvasRef}
-      className={`absolute inset-0 pointer-events-none z-0 ${className}`}
-      style={{ width: "100%", height: "100%" }}
-    />
+    <div ref={containerRef} className={`absolute inset-0 ${className}`}>
+      <canvas
+        ref={canvasRef}
+        className="absolute inset-0 pointer-events-none z-0"
+        style={{ width: "100%", height: "100%", willChange: "transform" }}
+      />
+    </div>
   );
-};
+});
+
+ParticleBackground.displayName = "ParticleBackground";
 
 export default ParticleBackground;

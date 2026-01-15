@@ -379,12 +379,6 @@ const Editor = () => {
               <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
               <span className="hidden sm:inline">Home</span>
             </a>
-            <a
-              href="/demo"
-              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-            >
-              View Profile
-            </a>
           </div>
           
           <div className="flex items-center gap-2">
