@@ -65,6 +65,10 @@ export default {
         usdt: "hsl(var(--usdt))",
         twitter: "hsl(var(--twitter))",
         github: "hsl(var(--github))",
+        naija: {
+          green: "#008751",
+          light: "#00A86B",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",

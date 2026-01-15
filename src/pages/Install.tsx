@@ -40,12 +40,12 @@ const Install = () => {
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-8"
         >
-          <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-primary to-pink-600 flex items-center justify-center mx-auto mb-4 shadow-2xl shadow-primary/30">
+          <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-naija-green to-emerald-500 flex items-center justify-center mx-auto mb-4 shadow-2xl shadow-naija-green/30">
             <Smartphone className="w-10 h-10 text-white" />
           </div>
-          <h1 className="text-2xl font-bold text-foreground mb-2">Install LinkBio</h1>
+          <h1 className="text-2xl font-bold text-foreground mb-2">Install Link9jtree</h1>
           <p className="text-muted-foreground">
-            Get the full app experience on your device
+            Get the full app experience - FREE for all Naija creators! 🇳🇬
           </p>
         </motion.div>
 
@@ -56,12 +56,12 @@ const Install = () => {
             animate={{ opacity: 1, scale: 1 }}
             className="glass-strong rounded-2xl p-6 text-center mb-6"
           >
-            <div className="w-16 h-16 rounded-full bg-green-500/20 flex items-center justify-center mx-auto mb-4">
-              <Check className="w-8 h-8 text-green-500" />
+            <div className="w-16 h-16 rounded-full bg-naija-green/20 flex items-center justify-center mx-auto mb-4">
+              <Check className="w-8 h-8 text-naija-green" />
             </div>
             <h2 className="text-lg font-semibold text-foreground mb-2">Already Installed!</h2>
             <p className="text-sm text-muted-foreground">
-              LinkBio is already on your home screen. Open it from there for the best experience.
+              Link9jtree don dey your home screen. Open am from there for the best experience.
             </p>
           </motion.div>
         )}
@@ -77,7 +77,7 @@ const Install = () => {
             <Button
               onClick={handleInstall}
               size="lg"
-              className="w-full bg-gradient-to-r from-primary to-pink-600 hover:from-primary/90 hover:to-pink-600/90 rounded-xl h-14 text-lg gap-3"
+              className="w-full bg-gradient-to-r from-naija-green to-emerald-500 hover:from-naija-green/90 hover:to-emerald-500/90 rounded-xl h-14 text-lg gap-3"
             >
               <Download className="w-5 h-5" />
               Install App
@@ -200,8 +200,8 @@ const Install = () => {
                 <span className="text-sm text-muted-foreground">Open Chrome menu (⋮)</span>
               </div>
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-sm font-bold text-primary">2</div>
-                <span className="text-sm text-muted-foreground">Click "Install LinkBio..."</span>
+                <div className="w-8 h-8 rounded-full bg-naija-green/20 flex items-center justify-center text-sm font-bold text-naija-green">2</div>
+                <span className="text-sm text-muted-foreground">Click "Install Link9jtree..."</span>
               </div>
             </div>
           </motion.div>
