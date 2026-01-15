@@ -17,6 +17,7 @@ interface LinkCardProps {
   label: string;
   href: string;
   index: number;
+  onClickTrack?: () => void;
 }
 
 const ICON_MAP: Record<string, LucideIcon> = {
@@ -86,16 +87,23 @@ const PLATFORM_STYLES: Record<string, {
   },
 };
 
-const LinkCard = ({ platform, label, href, index }: LinkCardProps) => {
+const LinkCard = ({ platform, label, href, index, onClickTrack }: LinkCardProps) => {
   const iconName = getIconForPlatform(platform);
   const Icon = ICON_MAP[iconName] || LinkIcon;
   const styles = PLATFORM_STYLES[platform] || PLATFORM_STYLES.custom;
+
+  const handleClick = () => {
+    if (onClickTrack) {
+      onClickTrack();
+    }
+  };
 
   return (
     <motion.a
       href={href}
       target="_blank"
       rel="noopener noreferrer"
+      onClick={handleClick}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: 0.15 * index }}

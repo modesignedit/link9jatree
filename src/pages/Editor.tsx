@@ -14,6 +14,7 @@ import {
   Radio,
   ImagePlus,
   Sparkles,
+  BarChart3,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -23,6 +24,8 @@ import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { PhonePreview } from "@/components/PhonePreview";
 import { LinkCardEditor } from "@/components/LinkCardEditor";
+import AvatarCropper from "@/components/AvatarCropper";
+import AnalyticsDashboard from "@/components/AnalyticsDashboard";
 import confetti from "canvas-confetti";
 
 interface Profile {
@@ -61,6 +64,9 @@ const Editor = () => {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [showCropper, setShowCropper] = useState(false);
+  const [cropImageSrc, setCropImageSrc] = useState("");
+  const [showAnalytics, setShowAnalytics] = useState(false);
   const [profile, setProfile] = useState<Profile>({
     display_name: "",
     bio: "",
@@ -218,9 +224,9 @@ const Editor = () => {
     navigate("/");
   };
 
-  const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleAvatarSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (!file || !user) return;
+    if (!file) return;
 
     // Validate file type
     if (!file.type.startsWith("image/")) {
@@ -234,15 +240,31 @@ const Editor = () => {
       return;
     }
 
+    // Create object URL for cropping
+    const imageUrl = URL.createObjectURL(file);
+    setCropImageSrc(imageUrl);
+    setShowCropper(true);
+    
+    // Reset file input
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
+
+  const handleCropComplete = async (croppedBlob: Blob) => {
+    if (!user) return;
+
     setUploading(true);
     try {
-      const fileExt = file.name.split(".").pop();
-      const fileName = `${Date.now()}.${fileExt}`;
+      const fileName = `${Date.now()}.jpg`;
       const filePath = `${user.id}/${fileName}`;
 
       const { error: uploadError } = await supabase.storage
         .from("avatars")
-        .upload(filePath, file, { upsert: true });
+        .upload(filePath, croppedBlob, { 
+          upsert: true,
+          contentType: "image/jpeg"
+        });
 
       if (uploadError) throw uploadError;
 
@@ -251,12 +273,15 @@ const Editor = () => {
         .getPublicUrl(filePath);
 
       setProfile({ ...profile, avatar_url: publicUrl });
-      toast.success("Avatar uploaded! 📸");
+      toast.success("Avatar updated! 📸");
     } catch (error) {
       console.error("Upload error:", error);
       toast.error("Failed to upload image");
     } finally {
       setUploading(false);
+      // Cleanup object URL
+      URL.revokeObjectURL(cropImageSrc);
+      setCropImageSrc("");
     }
   };
 
@@ -290,8 +315,20 @@ const Editor = () => {
         ref={fileInputRef}
         type="file"
         accept="image/*"
-        onChange={handleAvatarUpload}
+        onChange={handleAvatarSelect}
         className="hidden"
+      />
+
+      {/* Avatar Cropper Modal */}
+      <AvatarCropper
+        isOpen={showCropper}
+        onClose={() => {
+          setShowCropper(false);
+          URL.revokeObjectURL(cropImageSrc);
+          setCropImageSrc("");
+        }}
+        imageSrc={cropImageSrc}
+        onCropComplete={handleCropComplete}
       />
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
@@ -309,14 +346,24 @@ const Editor = () => {
             <span className="hidden sm:inline">Back to Profile</span>
           </a>
           
-          <Button
-            variant="ghost"
-            onClick={handleSignOut}
-            className="text-muted-foreground hover:text-foreground"
-          >
-            <LogOut className="w-4 h-4 sm:mr-2" />
-            <span className="hidden sm:inline">Sign Out</span>
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button
+              variant={showAnalytics ? "default" : "ghost"}
+              onClick={() => setShowAnalytics(!showAnalytics)}
+              className={showAnalytics ? "bg-primary/20 text-primary" : "text-muted-foreground hover:text-foreground"}
+            >
+              <BarChart3 className="w-4 h-4 sm:mr-2" />
+              <span className="hidden sm:inline">Analytics</span>
+            </Button>
+            <Button
+              variant="ghost"
+              onClick={handleSignOut}
+              className="text-muted-foreground hover:text-foreground"
+            >
+              <LogOut className="w-4 h-4 sm:mr-2" />
+              <span className="hidden sm:inline">Sign Out</span>
+            </Button>
+          </div>
         </motion.header>
 
         {/* Main Content - Bento Grid */}
@@ -534,6 +581,25 @@ const Editor = () => {
                 </div>
               </div>
             </motion.div>
+
+            {/* Analytics Dashboard */}
+            <AnimatePresence>
+              {showAnalytics && user && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20, height: 0 }}
+                  animate={{ opacity: 1, y: 0, height: "auto" }}
+                  exit={{ opacity: 0, y: -20, height: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="glass-strong rounded-2xl sm:rounded-3xl p-4 sm:p-6 overflow-hidden"
+                >
+                  <div className="flex items-center gap-2 sm:gap-3 mb-5 sm:mb-6">
+                    <span className="text-xl sm:text-2xl">📊</span>
+                    <h2 className="text-lg sm:text-xl font-bold text-foreground tracking-tight">Analytics</h2>
+                  </div>
+                  <AnalyticsDashboard userId={user.id} />
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </div>
       </div>
