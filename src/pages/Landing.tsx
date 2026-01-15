@@ -10,7 +10,6 @@ import {
   ArrowRight,
   ChevronRight,
   Star,
-  Play,
   Download,
   Github,
   ExternalLink
@@ -97,11 +96,6 @@ const Landing = () => {
                 Install
               </Button>
             )}
-            <Link to="/demo">
-              <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">
-                Demo
-              </Button>
-            </Link>
             {user ? (
               <Link to="/editor">
                 <Button size="sm" className="bg-gradient-to-r from-naija-green to-emerald-500 gap-2">
@@ -189,12 +183,6 @@ const Landing = () => {
               <Button size="lg" className="w-full sm:w-auto bg-gradient-to-r from-naija-green via-emerald-500 to-naija-green bg-[length:200%_100%] hover:bg-[position:100%_0] transition-all duration-500 rounded-full px-8 h-14 text-lg gap-3 shadow-2xl shadow-naija-green/30">
                 {user ? "Go to Dashboard" : "Start for Free"}
                 <ArrowRight className="w-5 h-5" />
-              </Button>
-            </Link>
-            <Link to="/demo">
-              <Button size="lg" variant="outline" className="w-full sm:w-auto rounded-full px-8 h-14 text-lg gap-3 border-white/20 hover:bg-white/5">
-                <Play className="w-5 h-5" />
-                See Demo
               </Button>
             </Link>
           </motion.div>
@@ -378,7 +366,6 @@ const Landing = () => {
             
             {/* Links */}
             <div className="flex items-center gap-6 text-sm text-muted-foreground">
-              <Link to="/demo" className="hover:text-foreground transition-colors">Demo</Link>
               <Link to="/install" className="hover:text-foreground transition-colors">Install</Link>
               <Link to="/auth" className="hover:text-foreground transition-colors">Login</Link>
             </div>

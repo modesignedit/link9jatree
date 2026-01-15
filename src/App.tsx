@@ -7,7 +7,6 @@ import { ThemeProvider } from "next-themes";
 import { AuthProvider } from "@/hooks/useAuth";
 import PWAInstallPrompt from "@/components/PWAInstallPrompt";
 import Landing from "./pages/Landing";
-import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import Editor from "./pages/Editor";
 import Install from "./pages/Install";
@@ -25,7 +24,6 @@ const App = () => (
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<Landing />} />
-              <Route path="/demo" element={<Index />} />
               <Route path="/auth" element={<Auth />} />
               <Route path="/editor" element={<Editor />} />
               <Route path="/install" element={<Install />} />
