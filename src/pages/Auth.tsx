@@ -1,13 +1,14 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Mail, Lock, ArrowRight, Sparkles, Eye, EyeOff } from "lucide-react";
+import { Mail, Lock, ArrowRight, Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/useAuth";
 import { z } from "zod";
+import Logo from "@/components/Logo";
 
 const authSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
@@ -91,16 +92,17 @@ const Auth = () => {
         <div className="glass-strong rounded-2xl sm:rounded-3xl p-6 sm:p-8 shadow-2xl shadow-primary/20">
           {/* Header */}
           <div className="text-center mb-8">
+            {/* Logo */}
+            <div className="flex justify-center mb-4">
+              <Logo size="lg" showBadge={false} linkTo="" />
+            </div>
+            
             {/* Nigerian stripe decoration */}
             <div className="naija-stripe-animated w-24 mx-auto mb-4" />
             
-            <div className="inline-flex items-center gap-2 mb-4">
-              <span className="text-2xl animate-flag-fly">🇳🇬</span>
-              <h1 className="text-2xl font-bold text-foreground">
-                {isLogin ? "Welcome Back" : "Join Link9jtree"}
-              </h1>
-              <Sparkles className="w-6 h-6 text-[#008751]" />
-            </div>
+            <h1 className="text-xl font-bold text-foreground mb-2">
+              {isLogin ? "Welcome Back" : "Join Link9jtree"}
+            </h1>
             <p className="text-muted-foreground text-sm">
               {isLogin
                 ? "Sign in to manage your link-in-bio page"
