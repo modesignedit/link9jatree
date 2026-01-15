@@ -192,7 +192,7 @@ const Auth = () => {
           transition={{ delay: 0.3 }}
           className="block text-center mt-6 text-muted-foreground hover:text-foreground text-sm transition-colors"
         >
-          ← Back to profile
+          ← Back to Home
         </motion.a>
       </motion.div>
     </div>
