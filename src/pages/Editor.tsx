@@ -1,32 +1,28 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Save,
   LogOut,
   User,
-  Link as LinkIcon,
-  Wallet,
   Plus,
-  Trash2,
-  GripVertical,
-  ArrowLeft,
   Loader2,
+  Sparkles,
+  Camera,
+  ArrowLeft,
+  Bitcoin,
+  DollarSign,
+  Radio,
+  Zap,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { PhonePreview } from "@/components/PhonePreview";
+import { LinkCardEditor } from "@/components/LinkCardEditor";
 
 interface Profile {
   display_name: string;
@@ -88,7 +84,6 @@ const Editor = () => {
     if (!user) return;
 
     try {
-      // Fetch profile
       const { data: profileData } = await supabase
         .from("profiles")
         .select("*")
@@ -106,7 +101,6 @@ const Editor = () => {
         });
       }
 
-      // Fetch links
       const { data: linksData } = await supabase
         .from("social_links")
         .select("*")
@@ -128,7 +122,6 @@ const Editor = () => {
 
     setSaving(true);
     try {
-      // Update profile
       const { error: profileError } = await supabase
         .from("profiles")
         .update({
@@ -143,7 +136,6 @@ const Editor = () => {
 
       if (profileError) throw profileError;
 
-      // Delete existing links and insert new ones
       await supabase.from("social_links").delete().eq("user_id", user.id);
 
       if (links.length > 0) {
@@ -161,10 +153,12 @@ const Editor = () => {
         if (linksError) throw linksError;
       }
 
-      toast.success("Changes saved successfully!");
+      toast.success("Saved! Your page is live ✨", {
+        icon: "🎉",
+      });
     } catch (error) {
       console.error("Error saving:", error);
-      toast.error("Failed to save changes");
+      toast.error("Oops! Something went wrong 😅");
     } finally {
       setSaving(false);
     }
@@ -186,7 +180,6 @@ const Editor = () => {
     setLinks(
       links.map((link) => {
         if (link.id === id) {
-          // Update icon when platform changes
           if (updates.platform) {
             const platform = PLATFORM_OPTIONS.find(
               (p) => p.value === updates.platform
@@ -217,7 +210,14 @@ const Editor = () => {
   if (authLoading || loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-950 via-[#1a0b2e] to-black flex items-center justify-center">
-        <Loader2 className="w-8 h-8 text-primary animate-spin" />
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="flex flex-col items-center gap-4"
+        >
+          <Loader2 className="w-10 h-10 text-primary animate-spin" />
+          <span className="text-muted-foreground">Loading your vibe...</span>
+        </motion.div>
       </div>
     );
   }
@@ -226,295 +226,263 @@ const Editor = () => {
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-[#1a0b2e] to-black relative overflow-hidden">
       {/* Aurora background */}
       <div className="absolute inset-0 aurora-bg" />
+      
+      {/* Floating orbs */}
+      <div className="absolute top-20 left-10 w-64 h-64 bg-primary/20 rounded-full blur-3xl animate-float" />
+      <div className="absolute bottom-20 right-10 w-48 h-48 bg-pink-500/15 rounded-full blur-3xl animate-float" style={{ animationDelay: "2s" }} />
+      <div className="absolute top-1/2 left-1/4 w-32 h-32 bg-cyan-500/10 rounded-full blur-2xl animate-float" style={{ animationDelay: "4s" }} />
 
-      <div className="relative max-w-2xl mx-auto px-6 py-8">
+      <div className="relative max-w-7xl mx-auto px-4 md:px-8 py-6">
         {/* Header */}
-        <motion.div
+        <motion.header
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           className="flex items-center justify-between mb-8"
         >
           <a
             href="/"
-            className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
+            className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors group"
           >
-            <ArrowLeft className="w-5 h-5" />
-            <span>Back to Profile</span>
+            <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
+            <span className="hidden sm:inline">Back to Profile</span>
           </a>
+          
           <div className="flex items-center gap-3">
             <Button
-              onClick={handleSave}
-              disabled={saving}
-              className="bg-gradient-to-r from-primary to-pink-600 hover:from-primary/90 hover:to-pink-600/90"
-            >
-              {saving ? (
-                <Loader2 className="w-4 h-4 animate-spin mr-2" />
-              ) : (
-                <Save className="w-4 h-4 mr-2" />
-              )}
-              Save Changes
-            </Button>
-            <Button
-              variant="outline"
+              variant="ghost"
               onClick={handleSignOut}
-              className="border-white/10 hover:bg-white/5"
+              className="text-muted-foreground hover:text-foreground"
             >
-              <LogOut className="w-4 h-4 mr-2" />
-              Sign Out
+              <LogOut className="w-4 h-4 sm:mr-2" />
+              <span className="hidden sm:inline">Sign Out</span>
             </Button>
           </div>
-        </motion.div>
+        </motion.header>
 
-        {/* Profile Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="glass-strong rounded-2xl p-6 mb-6"
-        >
-          <div className="flex items-center gap-3 mb-6">
-            <div className="p-2 rounded-xl bg-primary/20">
-              <User className="w-5 h-5 text-primary" />
-            </div>
-            <h2 className="text-lg font-semibold text-foreground">
-              Profile Settings
-            </h2>
-          </div>
-
-          <div className="grid gap-5">
-            {/* Avatar Preview */}
-            <div className="flex items-center gap-4">
-              <div className="w-20 h-20 rounded-full overflow-hidden bg-white/10 ring-2 ring-primary/30">
-                {profile.avatar_url ? (
-                  <img
-                    src={profile.avatar_url}
-                    alt="Avatar preview"
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center text-muted-foreground">
-                    <User className="w-8 h-8" />
-                  </div>
-                )}
+        {/* Main Content - Bento Grid */}
+        <div className="grid lg:grid-cols-[320px_1fr] gap-6 lg:gap-8">
+          {/* Left Column - Phone Preview (sticky on desktop) */}
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.1 }}
+            className="hidden lg:block"
+          >
+            <div className="sticky top-6">
+              <div className="text-center mb-4">
+                <span className="text-sm text-muted-foreground">Live Preview ✨</span>
               </div>
-              <div className="flex-1">
-                <Label htmlFor="avatar" className="text-foreground/80">
-                  Avatar URL
-                </Label>
-                <Input
-                  id="avatar"
-                  placeholder="https://example.com/avatar.jpg"
-                  value={profile.avatar_url}
-                  onChange={(e) =>
-                    setProfile({ ...profile, avatar_url: e.target.value })
-                  }
-                  className="mt-1 bg-white/5 border-white/10"
+              <PhonePreview profile={profile} links={links} />
+            </div>
+          </motion.div>
+
+          {/* Right Column - Editor Cards */}
+          <div className="space-y-6">
+            {/* Your Vibe - Profile Section */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="glass-strong rounded-3xl p-6"
+            >
+              <div className="flex items-center gap-3 mb-6">
+                <span className="text-2xl">✨</span>
+                <h2 className="text-xl font-bold text-foreground">Your Vibe</h2>
+              </div>
+
+              {/* Avatar Section */}
+              <div className="flex flex-col sm:flex-row items-center gap-6 mb-6">
+                <div className="relative group">
+                  <div className="w-28 h-28 rounded-full overflow-hidden bg-gradient-to-br from-primary/20 to-pink-500/20 ring-4 ring-primary/30 group-hover:ring-primary/50 transition-all">
+                    {profile.avatar_url ? (
+                      <img
+                        src={profile.avatar_url}
+                        alt="Avatar"
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center">
+                        <User className="w-12 h-12 text-muted-foreground" />
+                      </div>
+                    )}
+                  </div>
+                  <div className="absolute inset-0 rounded-full bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center cursor-pointer">
+                    <Camera className="w-6 h-6 text-white" />
+                  </div>
+                </div>
+                <div className="flex-1 w-full">
+                  <label className="text-sm text-muted-foreground mb-1 block">PFP URL</label>
+                  <Input
+                    placeholder="Drop your pic link here 📸"
+                    value={profile.avatar_url}
+                    onChange={(e) => setProfile({ ...profile, avatar_url: e.target.value })}
+                    className="bg-white/5 border-white/10 rounded-xl h-11 placeholder:text-muted-foreground/50"
+                  />
+                </div>
+              </div>
+
+              {/* Name & Bio */}
+              <div className="grid sm:grid-cols-2 gap-4 mb-4">
+                <div>
+                  <label className="text-sm text-muted-foreground mb-1 block">Your Name</label>
+                  <Input
+                    placeholder="What should we call you? 👋"
+                    value={profile.display_name}
+                    onChange={(e) => setProfile({ ...profile, display_name: e.target.value })}
+                    className="bg-white/5 border-white/10 rounded-xl h-11 placeholder:text-muted-foreground/50"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm text-muted-foreground mb-1 flex items-center gap-2">
+                    <Radio className="w-3 h-3 text-live" />
+                    Live Stream URL
+                  </label>
+                  <Input
+                    placeholder="Streaming? Drop the link 🎮"
+                    value={profile.live_url}
+                    onChange={(e) => setProfile({ ...profile, live_url: e.target.value })}
+                    className="bg-white/5 border-white/10 rounded-xl h-11 placeholder:text-muted-foreground/50"
+                  />
+                </div>
+              </div>
+              
+              <div>
+                <label className="text-sm text-muted-foreground mb-1 block">Say less 💬</label>
+                <Textarea
+                  placeholder="Your bio in a nutshell..."
+                  value={profile.bio}
+                  onChange={(e) => setProfile({ ...profile, bio: e.target.value })}
+                  className="bg-white/5 border-white/10 rounded-xl resize-none placeholder:text-muted-foreground/50"
+                  rows={3}
                 />
               </div>
-            </div>
+            </motion.div>
 
-            <div>
-              <Label htmlFor="name" className="text-foreground/80">
-                Display Name
-              </Label>
-              <Input
-                id="name"
-                placeholder="Your Name"
-                value={profile.display_name}
-                onChange={(e) =>
-                  setProfile({ ...profile, display_name: e.target.value })
-                }
-                className="mt-1 bg-white/5 border-white/10"
-              />
-            </div>
-
-            <div>
-              <Label htmlFor="bio" className="text-foreground/80">
-                Bio
-              </Label>
-              <Textarea
-                id="bio"
-                placeholder="Tell the world about yourself..."
-                value={profile.bio}
-                onChange={(e) =>
-                  setProfile({ ...profile, bio: e.target.value })
-                }
-                className="mt-1 bg-white/5 border-white/10 resize-none"
-                rows={3}
-              />
-            </div>
-
-            <div>
-              <Label htmlFor="live" className="text-foreground/80">
-                Live Stream URL
-              </Label>
-              <Input
-                id="live"
-                placeholder="https://twitch.tv/yourname"
-                value={profile.live_url}
-                onChange={(e) =>
-                  setProfile({ ...profile, live_url: e.target.value })
-                }
-                className="mt-1 bg-white/5 border-white/10"
-              />
-            </div>
-          </div>
-        </motion.div>
-
-        {/* Social Links Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="glass-strong rounded-2xl p-6 mb-6"
-        >
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-3">
-              <div className="p-2 rounded-xl bg-twitter/20">
-                <LinkIcon className="w-5 h-5 text-twitter" />
-              </div>
-              <h2 className="text-lg font-semibold text-foreground">
-                Social Links
-              </h2>
-            </div>
-            <Button
-              onClick={addLink}
-              size="sm"
-              className="bg-white/10 hover:bg-white/20 text-foreground"
+            {/* Your Links Section */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+              className="glass-strong rounded-3xl p-6"
             >
-              <Plus className="w-4 h-4 mr-1" />
-              Add Link
-            </Button>
-          </div>
-
-          <div className="space-y-4">
-            {links.length === 0 ? (
-              <p className="text-muted-foreground text-center py-8">
-                No links yet. Add your first social link!
-              </p>
-            ) : (
-              links.map((link, index) => (
-                <motion.div
-                  key={link.id}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: 20 }}
-                  className="flex items-start gap-3 p-4 rounded-xl bg-white/5 border border-white/10"
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center gap-3">
+                  <span className="text-2xl">🔗</span>
+                  <h2 className="text-xl font-bold text-foreground">Your Links</h2>
+                  {links.length > 0 && (
+                    <span className="text-xs bg-primary/20 text-primary px-2 py-0.5 rounded-full">
+                      {links.length}
+                    </span>
+                  )}
+                </div>
+                <Button
+                  onClick={addLink}
+                  className="bg-gradient-to-r from-primary to-pink-600 hover:from-primary/90 hover:to-pink-600/90 rounded-full px-4 h-9 text-sm"
                 >
-                  <div className="pt-2 text-muted-foreground cursor-move">
-                    <GripVertical className="w-5 h-5" />
-                  </div>
-                  <div className="flex-1 grid gap-3">
-                    <div className="grid grid-cols-2 gap-3">
-                      <div>
-                        <Label className="text-xs text-muted-foreground">
-                          Platform
-                        </Label>
-                        <Select
-                          value={link.platform}
-                          onValueChange={(value) =>
-                            updateLink(link.id, { platform: value })
-                          }
-                        >
-                          <SelectTrigger className="mt-1 bg-white/5 border-white/10">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {PLATFORM_OPTIONS.map((option) => (
-                              <SelectItem key={option.value} value={option.value}>
-                                {option.label}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </div>
-                      <div>
-                        <Label className="text-xs text-muted-foreground">
-                          Label
-                        </Label>
-                        <Input
-                          value={link.label}
-                          onChange={(e) =>
-                            updateLink(link.id, { label: e.target.value })
-                          }
-                          className="mt-1 bg-white/5 border-white/10"
-                        />
-                      </div>
-                    </div>
-                    <div>
-                      <Label className="text-xs text-muted-foreground">URL</Label>
-                      <Input
-                        value={link.url}
-                        onChange={(e) =>
-                          updateLink(link.id, { url: e.target.value })
-                        }
-                        placeholder="https://..."
-                        className="mt-1 bg-white/5 border-white/10"
-                      />
-                    </div>
-                  </div>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => removeLink(link.id)}
-                    className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                  <Plus className="w-4 h-4 mr-1" />
+                  Add Link
+                </Button>
+              </div>
+
+              <AnimatePresence mode="popLayout">
+                {links.length === 0 ? (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="text-center py-12"
                   >
-                    <Trash2 className="w-4 h-4" />
-                  </Button>
-                </motion.div>
-              ))
-            )}
-          </div>
-        </motion.div>
+                    <div className="text-4xl mb-3">🌟</div>
+                    <p className="text-muted-foreground">
+                      No links yet. Add your first one!
+                    </p>
+                  </motion.div>
+                ) : (
+                  <div className="space-y-3">
+                    {links.map((link) => (
+                      <LinkCardEditor
+                        key={link.id}
+                        link={link}
+                        onUpdate={updateLink}
+                        onRemove={removeLink}
+                        platformOptions={PLATFORM_OPTIONS}
+                      />
+                    ))}
+                  </div>
+                )}
+              </AnimatePresence>
+            </motion.div>
 
-        {/* Crypto Wallets Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="glass-strong rounded-2xl p-6"
-        >
-          <div className="flex items-center gap-3 mb-6">
-            <div className="p-2 rounded-xl bg-btc/20">
-              <Wallet className="w-5 h-5 text-btc" />
-            </div>
-            <h2 className="text-lg font-semibold text-foreground">
-              Crypto Wallets
-            </h2>
-          </div>
+            {/* Get Paid Section */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+              className="glass-strong rounded-3xl p-6"
+            >
+              <div className="flex items-center gap-3 mb-6">
+                <span className="text-2xl">💰</span>
+                <h2 className="text-xl font-bold text-foreground">Get Paid</h2>
+              </div>
 
-          <div className="grid gap-5">
-            <div>
-              <Label htmlFor="btc" className="text-foreground/80">
-                Bitcoin (BTC) Address
-              </Label>
-              <Input
-                id="btc"
-                placeholder="bc1q..."
-                value={profile.btc_address}
-                onChange={(e) =>
-                  setProfile({ ...profile, btc_address: e.target.value })
-                }
-                className="mt-1 bg-white/5 border-white/10 font-mono text-sm"
-              />
-            </div>
-            <div>
-              <Label htmlFor="usdt" className="text-foreground/80">
-                USDT (ERC-20) Address
-              </Label>
-              <Input
-                id="usdt"
-                placeholder="0x..."
-                value={profile.usdt_address}
-                onChange={(e) =>
-                  setProfile({ ...profile, usdt_address: e.target.value })
-                }
-                className="mt-1 bg-white/5 border-white/10 font-mono text-sm"
-              />
-            </div>
+              <div className="grid sm:grid-cols-2 gap-4">
+                <div className="p-4 rounded-2xl bg-btc/10 border border-btc/20">
+                  <div className="flex items-center gap-2 mb-3">
+                    <Bitcoin className="w-5 h-5 text-btc" />
+                    <span className="font-medium text-foreground">Bitcoin</span>
+                  </div>
+                  <Input
+                    placeholder="bc1q... your BTC address"
+                    value={profile.btc_address}
+                    onChange={(e) => setProfile({ ...profile, btc_address: e.target.value })}
+                    className="bg-white/5 border-white/10 rounded-xl h-10 font-mono text-sm placeholder:text-muted-foreground/50"
+                  />
+                </div>
+                
+                <div className="p-4 rounded-2xl bg-usdt/10 border border-usdt/20">
+                  <div className="flex items-center gap-2 mb-3">
+                    <DollarSign className="w-5 h-5 text-usdt" />
+                    <span className="font-medium text-foreground">USDT (TRC20)</span>
+                  </div>
+                  <Input
+                    placeholder="T... your USDT address"
+                    value={profile.usdt_address}
+                    onChange={(e) => setProfile({ ...profile, usdt_address: e.target.value })}
+                    className="bg-white/5 border-white/10 rounded-xl h-10 font-mono text-sm placeholder:text-muted-foreground/50"
+                  />
+                </div>
+              </div>
+            </motion.div>
           </div>
-        </motion.div>
+        </div>
       </div>
+
+      {/* Floating Save Button */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.5 }}
+        className="fixed bottom-6 right-6 z-50"
+      >
+        <Button
+          onClick={handleSave}
+          disabled={saving}
+          size="lg"
+          className="bg-gradient-to-r from-primary via-pink-600 to-primary bg-[length:200%_100%] hover:bg-[position:100%_0] transition-all duration-500 rounded-full px-8 shadow-2xl shadow-primary/25 group"
+        >
+          {saving ? (
+            <>
+              <Loader2 className="w-5 h-5 animate-spin mr-2" />
+              Saving...
+            </>
+          ) : (
+            <>
+              <Sparkles className="w-5 h-5 mr-2 group-hover:animate-pulse" />
+              Save Changes
+            </>
+          )}
+        </Button>
+      </motion.div>
     </div>
   );
 };
