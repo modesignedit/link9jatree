@@ -51,6 +51,9 @@ interface SocialLink {
   url: string;
   icon: string;
   display_order: number;
+  custom_color?: string;
+  custom_icon?: string;
+  animation?: string;
 }
 
 const DEFAULT_EFFECTS: BackgroundEffects = {
@@ -183,6 +186,9 @@ const Editor = () => {
             url: link.url,
             icon: link.icon,
             display_order: index,
+            custom_color: link.custom_color || null,
+            custom_icon: link.custom_icon || null,
+            animation: link.animation || 'none',
           }))
         );
 

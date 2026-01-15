@@ -1,4 +1,5 @@
-import { Trash2, GripVertical, ExternalLink } from "lucide-react";
+import { useState } from "react";
+import { Trash2, GripVertical, ExternalLink, Palette, Sparkles, ChevronDown, ChevronUp } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
@@ -8,14 +9,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { motion, AnimatePresence } from "framer-motion";
 
-interface SocialLink {
+export interface SocialLink {
   id: string;
   platform: string;
   label: string;
   url: string;
   icon: string;
   display_order: number;
+  custom_color?: string;
+  custom_icon?: string;
+  animation?: string;
 }
 
 interface LinkCardEditorProps {
@@ -32,9 +37,9 @@ const PLATFORM_STYLES: Record<string, { bg: string; border: string; icon: string
     icon: "text-twitter",
   },
   instagram: {
-    bg: "bg-gradient-to-br from-instagram-pink/10 via-instagram-purple/10 to-instagram-orange/10",
-    border: "border-instagram-pink/30 hover:border-instagram-pink/50",
-    icon: "text-instagram-pink",
+    bg: "bg-gradient-to-br from-pink-500/10 via-purple-500/10 to-orange-500/10",
+    border: "border-pink-500/30 hover:border-pink-500/50",
+    icon: "text-pink-500",
   },
   github: {
     bg: "bg-github/5",
@@ -79,18 +84,65 @@ const PLATFORM_EMOJI: Record<string, string> = {
   custom: "🔗",
 };
 
+const COLOR_PRESETS = [
+  { id: "default", name: "Default", color: null },
+  { id: "purple", name: "Purple", color: "#8B5CF6" },
+  { id: "pink", name: "Pink", color: "#EC4899" },
+  { id: "blue", name: "Blue", color: "#3B82F6" },
+  { id: "cyan", name: "Cyan", color: "#06B6D4" },
+  { id: "green", name: "Green", color: "#10B981" },
+  { id: "orange", name: "Orange", color: "#F59E0B" },
+  { id: "red", name: "Red", color: "#EF4444" },
+];
+
+const ICON_OPTIONS = [
+  { id: "default", emoji: "🔗", name: "Default" },
+  { id: "rocket", emoji: "🚀", name: "Rocket" },
+  { id: "star", emoji: "⭐", name: "Star" },
+  { id: "fire", emoji: "🔥", name: "Fire" },
+  { id: "sparkles", emoji: "✨", name: "Sparkles" },
+  { id: "heart", emoji: "❤️", name: "Heart" },
+  { id: "lightning", emoji: "⚡", name: "Lightning" },
+  { id: "globe", emoji: "🌍", name: "Globe" },
+  { id: "music", emoji: "🎵", name: "Music" },
+  { id: "camera", emoji: "📷", name: "Camera" },
+  { id: "video", emoji: "🎬", name: "Video" },
+  { id: "code", emoji: "💻", name: "Code" },
+  { id: "book", emoji: "📚", name: "Book" },
+  { id: "money", emoji: "💰", name: "Money" },
+  { id: "crown", emoji: "👑", name: "Crown" },
+  { id: "diamond", emoji: "💎", name: "Diamond" },
+];
+
+const ANIMATION_OPTIONS = [
+  { id: "none", name: "None", description: "No animation" },
+  { id: "pulse", name: "Pulse", description: "Gentle pulsing glow" },
+  { id: "bounce", name: "Bounce", description: "Bouncy hover effect" },
+  { id: "shake", name: "Shake", description: "Attention-grabbing shake" },
+  { id: "glow", name: "Glow", description: "Rainbow glow effect" },
+  { id: "shine", name: "Shine", description: "Sweeping shine" },
+];
+
 export const LinkCardEditor = ({
   link,
   onUpdate,
   onRemove,
   platformOptions,
 }: LinkCardEditorProps) => {
+  const [showStyling, setShowStyling] = useState(false);
   const styles = PLATFORM_STYLES[link.platform] || PLATFORM_STYLES.custom;
-  const emoji = PLATFORM_EMOJI[link.platform] || "🔗";
+  const emoji = link.custom_icon 
+    ? ICON_OPTIONS.find(i => i.id === link.custom_icon)?.emoji 
+    : PLATFORM_EMOJI[link.platform] || "🔗";
+
+  const customBgStyle = link.custom_color 
+    ? { backgroundColor: `${link.custom_color}15`, borderColor: `${link.custom_color}40` }
+    : {};
 
   return (
     <div
-      className={`${styles.bg} ${styles.border} border-2 rounded-xl sm:rounded-2xl p-3 sm:p-4 transition-all duration-300 hover:scale-[1.01]`}
+      className={`${!link.custom_color ? styles.bg : ''} ${!link.custom_color ? styles.border : ''} border-2 rounded-xl sm:rounded-2xl p-3 sm:p-4 transition-all duration-300 hover:scale-[1.01]`}
+      style={customBgStyle}
     >
       {/* Header with platform and delete */}
       <div className="flex items-center justify-between mb-2.5 sm:mb-3">
@@ -116,6 +168,14 @@ export const LinkCardEditor = ({
           </Select>
         </div>
         <div className="flex items-center gap-0.5 sm:gap-1">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setShowStyling(!showStyling)}
+            className={`h-8 w-8 transition-colors ${showStyling ? 'text-primary bg-primary/10' : 'text-muted-foreground hover:text-foreground'}`}
+          >
+            <Palette className="w-4 h-4" />
+          </Button>
           <div
             className="h-8 w-8 flex items-center justify-center text-muted-foreground hover:text-foreground cursor-grab active:cursor-grabbing touch-none"
           >
@@ -159,6 +219,114 @@ export const LinkCardEditor = ({
           )}
         </div>
       </div>
+
+      {/* Styling Options */}
+      <AnimatePresence>
+        {showStyling && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="overflow-hidden"
+          >
+            <div className="pt-4 mt-4 border-t border-white/10 space-y-4">
+              {/* Custom Color */}
+              <div>
+                <label className="text-xs uppercase tracking-wider text-muted-foreground/70 mb-2 block flex items-center gap-1.5">
+                  <Palette className="w-3 h-3" />
+                  Color Theme
+                </label>
+                <div className="flex flex-wrap gap-2">
+                  {COLOR_PRESETS.map((preset) => (
+                    <button
+                      key={preset.id}
+                      onClick={() => onUpdate(link.id, { custom_color: preset.color || undefined })}
+                      className={`w-8 h-8 rounded-lg border-2 transition-all ${
+                        (link.custom_color === preset.color || (!link.custom_color && !preset.color))
+                          ? 'border-primary ring-2 ring-primary/30 scale-110'
+                          : 'border-white/20 hover:border-white/40'
+                      }`}
+                      style={{ backgroundColor: preset.color || 'transparent' }}
+                      title={preset.name}
+                    >
+                      {!preset.color && (
+                        <span className="text-xs text-muted-foreground">✕</span>
+                      )}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Custom Icon */}
+              <div>
+                <label className="text-xs uppercase tracking-wider text-muted-foreground/70 mb-2 block flex items-center gap-1.5">
+                  <Sparkles className="w-3 h-3" />
+                  Custom Icon
+                </label>
+                <div className="flex flex-wrap gap-1.5">
+                  {ICON_OPTIONS.map((icon) => (
+                    <button
+                      key={icon.id}
+                      onClick={() => onUpdate(link.id, { custom_icon: icon.id === 'default' ? undefined : icon.id })}
+                      className={`w-9 h-9 rounded-lg border-2 transition-all text-lg flex items-center justify-center ${
+                        (link.custom_icon === icon.id || (!link.custom_icon && icon.id === 'default'))
+                          ? 'border-primary bg-primary/20 ring-2 ring-primary/30'
+                          : 'border-white/10 bg-white/5 hover:border-white/30'
+                      }`}
+                      title={icon.name}
+                    >
+                      {icon.emoji}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Animation */}
+              <div>
+                <label className="text-xs uppercase tracking-wider text-muted-foreground/70 mb-2 block flex items-center gap-1.5">
+                  <Sparkles className="w-3 h-3" />
+                  Animation
+                </label>
+                <div className="grid grid-cols-3 gap-2">
+                  {ANIMATION_OPTIONS.map((anim) => (
+                    <button
+                      key={anim.id}
+                      onClick={() => onUpdate(link.id, { animation: anim.id })}
+                      className={`px-3 py-2 rounded-lg border-2 transition-all text-left ${
+                        (link.animation === anim.id || (!link.animation && anim.id === 'none'))
+                          ? 'border-primary bg-primary/20'
+                          : 'border-white/10 bg-white/5 hover:border-white/30'
+                      }`}
+                    >
+                      <p className="text-xs font-medium text-foreground">{anim.name}</p>
+                      <p className="text-[10px] text-muted-foreground/70">{anim.description}</p>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Toggle styling button */}
+      <button
+        onClick={() => setShowStyling(!showStyling)}
+        className="w-full mt-3 flex items-center justify-center gap-1 text-xs text-muted-foreground/60 hover:text-muted-foreground transition-colors"
+      >
+        {showStyling ? (
+          <>
+            <ChevronUp className="w-3 h-3" />
+            Hide styling options
+          </>
+        ) : (
+          <>
+            <ChevronDown className="w-3 h-3" />
+            Customize appearance
+          </>
+        )}
+      </button>
     </div>
   );
 };

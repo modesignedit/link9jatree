@@ -18,6 +18,9 @@ interface SocialLink {
   platform: string;
   label: string;
   url: string;
+  custom_color?: string;
+  custom_icon?: string;
+  animation?: string;
 }
 
 interface PhonePreviewProps {
@@ -133,17 +136,27 @@ export const PhonePreview = ({ profile, links }: PhonePreviewProps) => {
                   Add links to see them here ✨
                 </div>
               ) : (
-                links.slice(0, 4).map((link) => (
-                  <div
-                    key={link.id}
-                    className={`${PLATFORM_COLORS[link.platform] || PLATFORM_COLORS.custom} rounded-xl p-2.5 flex items-center justify-between border border-white/10`}
-                  >
-                    <span className="text-[10px] font-medium text-foreground truncate">
-                      {link.label}
-                    </span>
-                    <ChevronRight className="w-3 h-3 text-muted-foreground" />
-                  </div>
-                ))
+                links.slice(0, 4).map((link) => {
+                  const customStyle = link.custom_color 
+                    ? { backgroundColor: `${link.custom_color}20`, borderColor: `${link.custom_color}40` }
+                    : {};
+                  const animationClass = link.animation === 'pulse' ? 'animate-link-pulse' 
+                    : link.animation === 'glow' ? 'animate-link-glow' 
+                    : '';
+                  
+                  return (
+                    <div
+                      key={link.id}
+                      className={`${!link.custom_color ? (PLATFORM_COLORS[link.platform] || PLATFORM_COLORS.custom) : ''} rounded-xl p-2.5 flex items-center justify-between border border-white/10 ${animationClass}`}
+                      style={customStyle}
+                    >
+                      <span className="text-[10px] font-medium text-foreground truncate">
+                        {link.label}
+                      </span>
+                      <ChevronRight className="w-3 h-3 text-muted-foreground" />
+                    </div>
+                  );
+                })
               )}
               {links.length > 4 && (
                 <div className="text-[10px] text-muted-foreground text-center">

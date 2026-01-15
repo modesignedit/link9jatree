@@ -37,6 +37,9 @@ interface SocialLink {
   label: string;
   url: string;
   display_order: number;
+  custom_color?: string;
+  custom_icon?: string;
+  animation?: string;
 }
 
 const DEFAULT_EFFECTS: BackgroundEffects = {
@@ -265,6 +268,9 @@ const Index = () => {
               label={link.label}
               href={link.url}
               index={index}
+              customColor={link.custom_color}
+              customIcon={link.custom_icon}
+              animation={link.animation}
               onClickTrack={() => handleLinkClick(link.id, link.label)}
             />
           ))}
